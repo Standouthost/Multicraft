@@ -9,17 +9,9 @@ PASSWORD="$5"
 KILL=`/usr/sbin/lsof -t -i @"$SERVER_IP":"$SERVER_PORT"`
 kill -9 "$KILL"
 
-sed "s/port.*/port=$SERVER_PORT/g" $SERVER_DIR/Mumble/murmur.ini > $SERVER_DIR/Mumble/new.xml
-
-mv $SERVER_DIR/Mumble/new.xml $SERVER_DIR/Mumble/murmur.ini
-
-sed "s/.*host=.*/host=$SERVER_IP/g" $SERVER_DIR/Mumble/murmur.ini > $SERVER_DIR/Mumble/new.xml
-
-mv $SERVER_DIR/Mumble/new.xml $SERVER_DIR/Mumble/murmur.ini
-
-sed "s/users.*/users=$MAX_PLAYERS/g" $SERVER_DIR/Mumble/murmur.ini > $SERVER_DIR/Mumble/new.xml
-
-mv $SERVER_DIR/Mumble/new.xml $SERVER_DIR/Mumble/murmur.ini
+sed -i "s/port.*/port=$SERVER_PORT/g" $SERVER_DIR/Mumble/murmur.ini
+sed -i "s/.*host=.*/host=$SERVER_IP/g" $SERVER_DIR/Mumble/murmur.ini
+sed -i "s/users.*/users=$MAX_PLAYERS/g" $SERVER_DIR/Mumble/murmur.ini
 
 $SERVER_DIR/Mumble/murmur.x86 -ini $SERVER_DIR/Mumble/murmur.ini -supw $PASSWORD
 
