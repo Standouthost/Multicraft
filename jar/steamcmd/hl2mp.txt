@@ -1,0 +1,4 @@
+login anonymous
+force_install_dir ./hl2mp
+app_update 232370 validate
+quit
