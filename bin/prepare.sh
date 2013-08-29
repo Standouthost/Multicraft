@@ -7,7 +7,6 @@
 ## having the following setting in the [useragent] section:
 ## userAgentSuperuserPrepare = prepare.sh
 ##exit 0
-
 if [ ! -f ${SERVER_DIR}/server.properties ]; then
        	exit 1
 fi
