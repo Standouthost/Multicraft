@@ -182,24 +182,6 @@ if [ $JAR_FILE == 'teamspeak.jar' ]; then
 else
 	echo "You did not choose Teamspeak"
 fi
-if [ $JAR_FILE == 'tf2.jar' ]; then
-	if [ -d $SERVER_DIR/Steam ]; then
-		echo "huzzah files"
-        else
-                rsync -avz $JAR_DIR/steam/*  $SERVER_DIR/Steam
-	fi
-else
-	echo "You did not choose TF2"
-fi
-if [ $JAR_FILE == 'cstrikesource.jar' ] then
-	if [ -d $SERVER_DIR/Steam ]; then
-		echo "huzzah files"
-	else
-		rsync -avz $JAR_DIR/steam/*  $SERVER_DIR/Steam
-	fi
-else
-        echo "You did not choose Steam"
-fi
 if [ $JAR_FILE == 'garrysmod.jar' ]; then
 	if [ -d $SERVER_DIR/Steam ]; then
 		echo "huzzah files"
@@ -218,7 +200,7 @@ if [ $JAR_FILE == 'samp.jar' ]
 else
         echo "You did not choose San Andreas"
 fi
-if [ $JAR_FILE == 'hl2mp.jar' ]; then
+if [ $JAR_FILE == 'hl2mp.jar' || $JAR_FILE == 'cstrikesource.jar' || $JAR_FILE == 'tf2.jar' ]; then
 	if [ -d $SERVER_DIR/Steam ]; then
 		echo "huzzah files"
 	else
