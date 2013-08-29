@@ -8,13 +8,8 @@ SERVER_IP="78.46.213.213"
 KILL=`/usr/sbin/lsof -t -i @"$SERVER_IP":"$SERVER_PORT"`
 kill -9 "$KILL"
 
-sed 's/.*"MaxPlayers".*/    <ConfigKey key="MaxPlayers" value="'$MAX_PLAYERS'" default="20" \/>/g' $SERVER_DIR/classic/config.xml > $SERVER_DIR/classic/new.xml
-
-mv $SERVER_DIR/classic/new.xml $SERVER_DIR/classic/config.xml
-
-sed 's/.*"Port".*/    <ConfigKey key="Port" value="'$SERVER_PORT'" default="25565" \/>/g' $SERVER_DIR/classic/config.xml > $SERVER_DIR/classic/new.xml
-
-mv $SERVER_DIR/classic/new.xml $SERVER_DIR/classic/config.xml
+sed -i 's/.*"MaxPlayers".*/    <ConfigKey key="MaxPlayers" value="'$MAX_PLAYERS'" default="20" \/>/g' $SERVER_DIR/classic/config.xml
+sed -i 's/.*"Port".*/    <ConfigKey key="Port" value="'$SERVER_PORT'" default="25565" \/>/g' $SERVER_DIR/classic/config.xml
 
 export PATH=$PATH:/opt/mono/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mono/lib
