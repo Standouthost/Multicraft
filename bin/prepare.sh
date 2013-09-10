@@ -12,11 +12,11 @@ LSOF=`which lsof`
     if [ "$IP" = "0.0.0.0" ]; then
         IP=""
     elif [ ! "$IP" = "" ]; then
-        IP="@$IP"
+        IP="$IP"
     fi
 
     #Check for running processes on the same IP/port
-    PID="`$LSOF -t -i$IP:$PORT`"
+    PID="`$LSOF -t -i\@$IP:$PORT`"
     if [ ! "$PID" = "" ]; then
         echo "Warning: Found running process using the same IP/port ($PID)"
             kill -9 "$PID"
@@ -182,7 +182,7 @@ if [ $JAR_FILE == 'teamspeak.jar' ]; then
 else
 	echo "You did not choose Teamspeak"
 fi
-if [[ $JAR_FILE == 'garrysmod.jar' || $JAR_FILE == 'tf2.jar' || $JAR_FILE == 'hl2mp.jar' || $JAR_FILE == 'cstrikesource.jar' ]]; then
+if [[ $JAR_FILE == 'left4dead2.jar' || $JAR_FILE == 'garrysmod.jar' || $JAR_FILE == 'tf2.jar' || $JAR_FILE == 'hl2mp.jar' || $JAR_FILE == 'cstrikesource.jar' ]]; then
 	if [ -d $SERVER_DIR/Steam ]; then
 		echo "huzzah files"
 	else
@@ -199,6 +199,21 @@ if [ $JAR_FILE == 'samp.jar' ]; then
 	fi
 else
         echo "You did not choose San Andreas"
+fi
+if [ $JAR_FILE == 'StarMade.jar' ]; then
+	if [ -f $SERVER_DIR/StarMade-Starter.jar ]; then
+		echo "huzzah files"
+	else
+		cp $JAR_DIR/StarMade-Starter.jar $SERVER_DIR/
+	fi
+	cd $SERVER_DIR
+	java -jar $SERVER_DIR/StarMade-Starter.jar -nogui
+	sleep 5
+	if [ ! -f $SERVER_DIR/StarMade/server.cfg ]; then
+		cp $JAR_DIR/StarMade.cfg $SERVER_DIR/StarMade/server.cfg
+	fi
+	sed -i "s/^MAX_CLIENTS =.*/MAX_CLIENTS = $MAX_PLAYERS/g" $SERVER_DIR/StarMade/server.cfg
+	sed -i "s/^SERVER_LISTEN_IP =.*/SERVER_LISTEN_IP = $IP/g" $SERVER_DIR/StarMade/server.cfg
 fi
 if [ $JAR_FILE == 'mumble.jar' ]; then
 	if [ -d $SERVER_DIR/Mumble ]; then
