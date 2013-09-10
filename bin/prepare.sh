@@ -7,20 +7,6 @@
 ## having the following setting in the [useragent] section:
 ## userAgentSuperuserPrepare = prepare.sh
 ##exit 0
-LSOF=`which lsof`
-    #Convert IP to a format accepted by lsof
-    if [ "$IP" = "0.0.0.0" ]; then
-        IP=""
-    elif [ ! "$IP" = "" ]; then
-        IP="$IP"
-    fi
-
-    #Check for running processes on the same IP/port
-    PID="`$LSOF -t -i\@$IP:$PORT`"
-    if [ ! "$PID" = "" ]; then
-        echo "Warning: Found running process using the same IP/port ($PID)"
-            kill -9 "$PID"
-    fi
 #Everything above was coded by the developers at www.multicraft.org
 #Everything below was coded by jon@jmainguy.com
 if [ $JAR_FILE == 'my.jar' ]; then
@@ -226,3 +212,17 @@ else
 fi
 
 chown -R mc$SERVER_ID:mc$SERVER_ID "$SERVER_DIR"
+LSOF=`which lsof`
+    #Convert IP to a format accepted by lsof
+    if [ "$IP" = "0.0.0.0" ]; then
+        IP=""
+    elif [ ! "$IP" = "" ]; then
+        IP="@$IP"
+    fi
+
+    #Check for running processes on the same IP/port
+    PID="`$LSOF -t -i\@$IP:$PORT`"
+    if [ ! "$PID" = "" ]; then
+        echo "Warning: Found running process using the same IP/port ($PID)"
+            kill -9 "$PID"
+    fi
