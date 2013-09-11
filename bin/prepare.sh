@@ -7,8 +7,6 @@
 ## having the following setting in the [useragent] section:
 ## userAgentSuperuserPrepare = prepare.sh
 ##exit 0
-#Everything above was coded by the developers at www.multicraft.org
-#Everything below was coded by jon@jmainguy.com
 if [ $JAR_FILE == 'my.jar' ]; then
 	if [ -d $SERVER_DIR/jars ]; then
 		echo "jars dir exists"
