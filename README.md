@@ -3,7 +3,7 @@ Multicraft
 
 Open Source Multicraft Scripts All scripts published in this repository are released under the GNU License.
 
-    Copyright (C) 2013  Jonathan Mainguy
+    Copyright (C) 2013  Jonathan Mainguy jon@soh.re
 
     These scripts are free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
