@@ -1,11 +1,11 @@
 Multicraft
 ==========
 
-Open Source Multicraft Scripts
+Open Source Multicraft Scripts All scripts published in this repository are released under the GNU License.
 
     Copyright (C) 2013  Jonathan Mainguy
 
-    This program is free software: you can redistribute it and/or modify
+    These scripts are free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
