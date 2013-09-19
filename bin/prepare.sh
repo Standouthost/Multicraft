@@ -219,7 +219,7 @@ LSOF=`which lsof`
     fi
 
     #Check for running processes on the same IP/port
-    PID="`$LSOF -t -i\@$IP:$PORT`"
+    PID="`$LSOF -t -i\$IP:$PORT`"
     if [ ! "$PID" = "" ]; then
         echo "Warning: Found running process using the same IP/port ($PID)"
             kill -9 "$PID"
