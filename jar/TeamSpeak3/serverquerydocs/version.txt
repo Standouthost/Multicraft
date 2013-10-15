@@ -1,0 +1,8 @@
+Usage: version
+
+Displays the servers version information including platform and build number.
+
+Example:
+   version
+   version=3.0.0-beta16 build=9929 platform=Linux
+   error id=0 msg=ok

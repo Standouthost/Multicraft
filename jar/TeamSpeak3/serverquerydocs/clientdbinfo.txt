@@ -1,0 +1,9 @@
+Usage: clientdbinfo cldbid={clientDBID}
+  
+Displays detailed database information about a client including unique ID, creation date, etc.
+
+Example:
+	clientdbinfo cldbid=2
+	client_unique_identifier=5rRxyxEjd+Kk/MvPRfqZdSI0teA= client_nickname=dante696
+	client_database_id=2 client_created=1279002103 ...
+	error id=0 msg=ok

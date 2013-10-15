@@ -1,0 +1,67 @@
+===================================
+TeamSpeak 3 Server :: Upgrade Guide
+===================================
+
+Copyright (c) TeamSpeak Systems GmbH
+Last Update: 2010-10-26
+
+----------------
+(1) Introduction
+----------------
+
+The TeamSpeak 3 Server software gets updated on a regular basis. Updates are very important fix bugs, 
+patch security flaws and add new features so you should try to keep your servers up-to-date at any 
+time. During our OPEN BETA we have added several features to improve the update process.
+
+--------------------------------------------
+(2) How do I upgrade the TeamSpeak 3 Server?
+--------------------------------------------
+
+Actually, updating a server is very easy. Just download the latest TeamSpeak 3 Server release from
+our downloads page and overwrite all existing files in your servers installation folder with the 
+new versions from the download package.
+
+Example for Windows 32-Bit:
+
+ a) Navigate your webbrowser to http://www.teamspeak.com/?page=downloads
+ b) Unzip the download package "teamspeak3-server_win32-<VERSION>.zip" to a directory of your
+    choice
+ c) Shutdown your running TeamSpeak 3 Server instance
+ d) Select and copy all files from the newly generated directory "teamspeak3-server_win32" into
+    your existing server installation directory
+ e) Start your TeamSpeak 3 Server instance
+ f) Use the TeamSpeak 3 Client to connect to a virtual server running in your TeamSpeak 3 Server 
+    instance and click the server name to verify that your server has been updated successfully
+
+-----------------------------------------------------------------------
+(3) How can I make sure that my permission system is upgraded properly?
+-----------------------------------------------------------------------
+
+If you were using a version of the TeamSpeak 3 Server prior to 3.0.0-beta22, you had to update your 
+database manually in order to apply updates to the permission system. Depending on the number of 
+virtual servers running you're running, this was a time consuming task. With version 3.0.0-beta22, 
+we've added a new special permission called "i_group_auto_update_type". Whenever the permission 
+system gets updated, the server will automatically try to assign the new permissions to your existing 
+groups.
+
+If you want to check if your permission system was updated automatically, simply open the latest 
+server logfile and search for an entry similar to this line:
+
+2010-10-26 13:37:00.123456|INFO    |SQL           |   | updated permissions to version <VERSION>
+
+Fresh installations of the server already have the correct values for this permission assigned. If 
+your database is based on an older release, it is very important that you assign the permission to 
+both your template and regular server groups on all existing virtual servers.
+
+-----------------------------------------------------------------------------------------------
+(4) I'm using the same database for multiple server instances. Is there anything I need to know 
+    before I update?
+-----------------------------------------------------------------------------------------------
+
+Yes. The database contains a table called "instance_properties" which stores all settings for 
+each server instance. Since 3.0.0-beta30 this table includes an additional column called 
+"string_id". The value of this column represents the machine_id of the existing virtual servers 
+associated with the  server instance. If you update your server instances it's important that 
+you start each of them one by one in order to have the permission system settings of all virtual 
+servers updated properly. Please wait until the server startup process is finished and verify 
+that everything is working as expected before you start the next server instance.

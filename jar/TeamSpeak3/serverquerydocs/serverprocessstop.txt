@@ -1,0 +1,7 @@
+Usage: serverprocessstop
+
+Stops the entire TeamSpeak 3 Server instance by shutting down the process.
+
+Example:
+   serverprocessstop
+   error id=0 msg=ok

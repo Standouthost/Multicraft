@@ -1,0 +1,9 @@
+Usage: whoami
+
+Displays information about your current ServerQuery connection including the ID 
+of the selected virtual server, your loginname, etc.
+
+Example:
+   whoami
+   virtualserver_status=online virtualserver_id=1 client_channel_id=2 ...
+   error id=0 msg=ok

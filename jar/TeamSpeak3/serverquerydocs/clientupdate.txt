@@ -1,0 +1,7 @@
+Usage: clientupdate [client_properties...]
+
+Change your ServerQuery clients settings using given properties.
+
+Example:
+   clientupdate client_nickname=ScP\s(query)
+   error id=0 msg=ok

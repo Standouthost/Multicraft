@@ -1,0 +1,9 @@
+Usage: servergrouplist
+
+Displays a list of server groups available. Depending on your permissions, the 
+output may also contain global ServerQuery groups and template groups.
+
+Example:
+   servergrouplist
+   sgid=9 name=Server\sAdmin type=1 iconid=300 savedb=1|sgid=10 name=Normal t...
+   error id=0 msg=ok

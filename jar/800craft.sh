@@ -15,4 +15,5 @@ export PATH=$PATH:/opt/mono/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mono/bin
 mozroots --import --ask-remove 
 
+cd $SERVER_DIR/800craft
 /opt/mono/bin/mono --gc=sgen $SERVER_DIR/800craft/ServerCLI.exe

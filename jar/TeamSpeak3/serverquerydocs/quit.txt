@@ -1,0 +1,7 @@
+Usage: quit
+
+Closes the ServerQuery connection to the TeamSpeak 3 Server instance.
+
+Example:
+   quit
+   error id=0 msg=ok

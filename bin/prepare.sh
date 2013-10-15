@@ -46,6 +46,16 @@ if [ $JAR_FILE == 'craftbukkit_dev.jar' ]; then
 else
         echo "You did not choose Craftbukkit Dev Build"
 fi
+if [ $JAR_FILE == '800craft.jar' ]; then
+	if [ -d $SERVER_DIR/800craft ]; then
+		echo "huzzah files"
+        else 
+		mkdir $SERVER_DIR/800craft
+		cp $JAR_DIR/800craft/* $SERVER_DIR/800craft/
+	fi
+else
+        echo "You did not choose 800craft"
+fi
 if [ $JAR_FILE == 'fCraft.jar' ]; then
 	if [ -d $SERVER_DIR/classic ]; then
 		echo "huzzah files"
@@ -95,6 +105,16 @@ if [ $JAR_FILE == 'voltz.jar' ]; then
 	fi
 else
         echo "You did not choose Voltz"
+fi
+if [ $JAR_FILE == 'hexxit.jar' ]; then
+	if [ -d $SERVER_DIR/Hexxit ]; then
+		echo "huzzah files"
+	else
+		mkdir $SERVER_DIR/Hexxit
+		unzip -o $JAR_DIR/Hexxit.zip -d $SERVER_DIR/Hexxit/
+	fi
+else
+        echo "You did not choose Hexxit"
 fi
 if [ $JAR_FILE == 'tekkit.jar' ]; then
 	if [ -d $SERVER_DIR/Tekkit ]; then
@@ -161,7 +181,7 @@ if [ $JAR_FILE == 'teamspeak.jar' ]; then
 	if [ -d $SERVER_DIR/TeamSpeak3 ]; then
 		echo "huzzah files"
         else
-                cp -R $JAR_DIR/TeamSpeak3  $SERVER_DIR/
+                rsync -avz $JAR_DIR/TeamSpeak3  $SERVER_DIR/
 	fi
 else
 	echo "You did not choose Teamspeak"
@@ -196,8 +216,6 @@ if [ $JAR_FILE == 'StarMade.jar' ]; then
 	if [ ! -f $SERVER_DIR/StarMade/server.cfg ]; then
 		cp $JAR_DIR/StarMade.cfg $SERVER_DIR/StarMade/server.cfg
 	fi
-	sed -i "s/^MAX_CLIENTS =.*/MAX_CLIENTS = $MAX_PLAYERS/g" $SERVER_DIR/StarMade/server.cfg
-	sed -i "s/^SERVER_LISTEN_IP =.*/SERVER_LISTEN_IP = $IP/g" $SERVER_DIR/StarMade/server.cfg
 fi
 if [ $JAR_FILE == 'mumble.jar' ]; then
 	if [ -d $SERVER_DIR/Mumble ]; then

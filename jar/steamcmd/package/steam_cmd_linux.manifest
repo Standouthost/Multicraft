@@ -1,0 +1,26 @@
+"linux"
+{
+	"version"		"1378320571"
+	"steamcmd_public_all"
+	{
+		"file"		"steamcmd_public_all.zip.43ec282aa8e6290a5ff92ba84a11769968e697e5"
+		"checksum"		"43ec282aa8e6290a5ff92ba84a11769968e697e5"
+		"size"		"45523"
+	}
+	"steamcmd_bins_linux"
+	{
+		"file"		"steamcmd_bins_linux.zip.20d78ed9c33816b14a39fab9708dc82756492f91"
+		"checksum"		"20d78ed9c33816b14a39fab9708dc82756492f91"
+		"size"		"9792313"
+	}
+	"steamcmd_linux"
+	{
+		"file"		"steamcmd_linux.zip.2f2b5d9a1f19d2d0efae57d75348bb0aee050df4"
+		"checksum"		"2f2b5d9a1f19d2d0efae57d75348bb0aee050df4"
+		"size"		"1913558"
+	}
+}
+"kvsignatures"
+{
+	"linux"		"cfe22dd14c9db43ac85ec7312bf3651f174f072114a22184a2f5554dc752d7dc19ac0b311560c73361cfbd1e5f64a025c8b7940dbba514bb182a0a4795c08fc079d092ea3a33e00480c07d0f9d891016ca5f33e47f4c5fcc5e6dac74a046fce3f5178f4a50e3fd9a1fdd58c5b1d93140f4d61d424c5db22004ab31246d6e9e15"
+}

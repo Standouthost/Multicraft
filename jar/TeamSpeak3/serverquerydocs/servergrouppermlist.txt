@@ -1,0 +1,14 @@
+Usage: servergrouppermlist sgid={groupID} [-permsid]
+
+Displays a list of permissions assigned to the server group specified with sgid.
+The optional -permsid parameter can be used to get the permission names instead
+of their internal ID.
+
+Example:
+   servergrouppermlist sgid=13
+   permid=8470 permvalue=1 permnegated=0 permskip=0|permid=8475 permvalue=1|...
+   error id=0 msg=ok
+   
+   servergrouppermlist sgid=14 -permsid
+   permsid=b_virtualserver_info_view permvalue=1 permnegated=0 permskip=0|...
+   error id=0 msg=ok

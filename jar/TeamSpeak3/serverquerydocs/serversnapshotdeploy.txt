@@ -1,0 +1,10 @@
+Usage: serversnapshotdeploy {virtualserver_snapshot}
+
+Restores the selected virtual servers configuration using the data from a 
+previously created server snapshot. Please note that the TeamSpeak 3 Server 
+does NOT check for necessary permissions while deploying a snapshot so the 
+command could be abused to gain additional privileges.
+
+Example:
+   serversnapshotdeploy hash=bnTd2E1kNITHjJYRCFjgbKKO5P8=|virtualserver_...
+   error id=0 msg=ok

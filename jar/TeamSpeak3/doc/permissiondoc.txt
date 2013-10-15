@@ -1,0 +1,306 @@
+The Permission System
+=====================================================
+
+The Permission System is a very versatile and feature rich system that
+determines which users are allowed to do which actions.
+
+What kind or permissions are there?
++++++++++++++++++++++++++++++++++++
+
+Boolean Permissions
+-------------------
+These permissions can only have two values, true or false.
+
+Example:
+b_virtualserver_modify_name
+
+From the name of the permission you immediately see that it a boolean
+permission, since it begins with "b_". After this prefix is the actual name of
+the permission, which should give you an idea what the permission is about. In
+this case the permission controls if you may change the virtual server name. If
+it is set to true, you can change the virtual server name, if it is set to
+false or not set at all you can not edit the virtual server name.
+
+Integer Permissions
+-------------------
+These permissions accept integers as values. 
+
+Examples:
+i_channel_max_depth
+
+From the name again you can see that it is an integer permission, because it is
+prefixed with "i_". The actual name of the permission, channel_max_depth in
+this case tells you what this permission controls. In this case it controls how
+"deep" channel structures you may create. So if the value is set to "0", it
+means you can create only top-level channels. If it is set to "1", you can
+also create sub-channels. Set to "2" you can also create sub-sub-channels and
+so on.
+
+As with many permissions that have no logical limit i_channel_max_depth also
+has a special value of "-1" which means there is no maximum depth limitation
+for channels.
+
+Power and needed Power Permissions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+These permissions are a special case of Integer Permissions. They always come
+in pairs, one power permission and one needed power permission. You can only
+successfully issue the action the permission controls if your power is equal or
+greater than the associated needed power.
+
+Example:
+
+i_client_kick_power
+i_client_needed_kick_power
+
+When you want to kick a client the permission system will compare your "kick
+power" with the "needed kick power" of the target of your kick. If you have
+equal or greater power, you will be able to kick this client. If your power is
+less than the needed kick power of your target, you will not be able to go
+through. This essentially introduces a "pecking order", you can for example
+grant your lower tier administrators the permission to kick only guests, but
+your high tier administrators are able to kick any user on the server.
+
+i_needed_modify_power_* or Grant-Permissions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Every permission has an associated i_needed_modify_power_* permission, for
+example b_client_ban_create has an associated permission called
+i_needed_modify_power_client_ban_create. In the client interface these
+associated needed_modify_power permission are usually displayed as additional
+"Grant" value of the original permission, instead of as a separate permission
+of its own, which is why we call these permissions Grant-Permissions as well.
+These Grant-Permissions control which permissions a client is allowed to grant
+or revoke, so they are the key to modifying the permission system and are thus
+usually reserved to administrators. Editing the permission system will be
+explained further down in a separate chapter called "Who can edit the
+permission system?"
+
+How do clients get permissions? How are they assigned?
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The way a client receives his permissions is determined through a 5 layer
+system. Each layer can overwrite permissions from the previous layer. If a
+permission is not granted on any of these 5 layers, it will be assumed to be of
+zero or false value. These are the 5 Layers:
+
+Tier 1: Server Groups
+Tier 2: Client Specific Permissions
+Tier 3: Channel Specific Permissions
+Tier 4: Channel Groups
+Tier 5: Channel and Client Specific Permissions
+
+Example:
+You are in the "Guest" server group (Tier 1) which has the permission
+b_channel_modify_name set to false. But you are also a "Channel Admin" (Tier 4)
+and a channel admin has b_channel_modify_name set to true. Since the channel
+group is in a higher tier than the server group, in the end you *can* modify
+your channels name (but not that of other channels where you are not channel
+admin).
+
+Now we will discuss each layer and it's special properties in detail.
+
+Tier 1: Server Groups
+---------------------
+
+Every client is part of one or more server groups. These server groups can
+contain any number of permissions, that you receive when becoming part of the
+group. Since you can be part of multiple Server Groups at once, and since the
+same permission could be granted in multiple of these Server Groups there has
+to be a way to figure out the "resulting" permission of the Tier 1 layer in
+these cases. The logic behind this is to use the best or highest value as
+result. Every permission in a Server Group can have the flag "negate" or the
+"skip" flags set, they will be explained later in this chapter. Since every
+client is always part of at least one server group, there is a special group
+that can be configured in the server configuration, called the "Default Server
+Group". When a new (previously unknown) client joins the server he
+automatically becomes a member of this group. Also if you are currently in the
+Default Server Group and you are assigned a new group you automatically leave
+the Default Server Group.
+
+Example:
+Say you are member of three Server Groups: Server Admin, Clan Leader and War
+Organizer. Server admin has i_client_kick_power of 50. Clan Leader has
+i_client_kick_power of 100 and War Organizer does not have i_client_kick_power
+set at all. The permission resulting on Tier 1 for you is i_client_kick_power
+of 100, since this is the highest value you have from all your server groups.
+
+Sometimes you might want to create a Server Group that negatively affects the
+users that are put into it. For example a "Sticky" group that disallows
+switching of channels or a "Silent" group that removes the privileges to talk
+from the clients that receive it. To allow this the negate flag can be added to
+permissions in a server group. If you are member of a group that has a
+permission flagged with the negate flag, you will not receive the highest value
+of this permission, but rather the lowest that is flagged with negate.
+
+Example:
+You created a Server Group called "Sticky". It contains only one permission:
+i_channel_join_power set to "-1", and a negate flag is applied to this
+permission. Now if I grant sticky group to any client they will not be able to
+switch channels anymore. This also works if the user I put into "Sticky" group
+has a positive i_channel_join_power set, since the negate flag will make sure
+the Tier 1 result will be the lowest negated i_channel_join_power permission,
+so -1 or less than that. The reason why it is not possible to switch channels
+anymore is that normally a channel has no i_channel_needed_join_power set, and
+if a permission is not set it is assumed to be zero. Since -1 is smaller than
+zero, the user won't be able to join.
+
+Since Server Groups are the first Tier of permission layers, it is possible
+that they will be overwritten by a higher tier permission. Since it is
+sometimes desirable to prevent Channel Groups (Tier 4) to overwrite permissions
+that you received through your Server Group there is the "Skip" flag. If a
+permission in either Server Group (Tier 1) or Client Specific Permissions (Tier
+2) has the skip flag set, this permission will not be altered by any
+overlapping permission in the Channel Groups (Tier 4) or the Channel (Tier 3)
+layer.
+
+Example: As the admin of your server you do not want the channel group to be
+able to restrict your permissions. By adding the skip flag to all of the
+permissions in the server admin group you make sure that no matter how these
+permissions are configured by any channel groups you may be granted, these
+channel group permissions will not take any effect on your abilities.
+
+Tier 2: Client Specific Permissions
+-----------------------------------
+These permission are set to a specific client, and they will overwrite any
+overlapping permissions from Tier 1. Permissions on this layer can also (like
+Server Group permissions) have the skip flag set which will make sure the
+Channel Group (Tier 4) and Channel (Tier 3) will not overwrite the value of
+this permission.
+
+Example: You are in the "Guest" Server Group, which has a i_client_kick_power
+of zero. Since you want to be able to kick without assigning yourself an admin
+group or similar, you added a client specific permission of i_client_kick_power
+with value 100. Since Client Specific Permissions are Tier 2, they will
+overwrite any Tier 1 permissions when overlap occurs.
+
+Tier 3: Channel Specific Permissions
+------------------------------------
+Channel Specific Permissions are similar to the Client Specific Permissions,
+but applied on a channel level. One example of how this can be used is to
+control who is allowed to talk in a channel. Simply set a
+i_client_needed_talk_power value on the channel and only clients with a equal
+or higher i_client_talk_power permission will be able to talk in this channel.
+Other useful use cases might be channels that can only be joined by some users
+(via i_channel_needed_join_power) or that can only be looked into by some users
+(via i_channel_needed_subscribe_power).
+
+Tier 4: Channel Groups
+----------------------
+Every client is part of exactly one channel group. When a client is inserted
+into a new channel group, the server automatically removes this client from the
+previous channel group. Similar to channel specific permissions, permissions
+you get via a channel group can only be applied on the channel level, for
+example if you are granted b_channel_modify_password it will only let you
+modify the password of the channel in which you actually have this permission.
+There are two special channel groups that are configured in the sever settings,
+the "Default Channel Group" is assigned to any client that joins a channel for
+the first time and the "Default Channel Admin Group" is granted to the client
+that creates a channel.
+
+Tier 5: Channel and Client Specific Permissions
+-----------------------------------------------
+Channel and Client Specific Permissions are like a combination of Client
+Specific Permissions (Tier 2) and Channel Specific Permissions (Tier 3).
+They apply to a client and a channel at once; only when the specified client
+and the specified channels are concerned do they take affect. This is used
+behind the scenes for the priority speaker feature: when you are granted
+priority speaker status, a channel and client specific permission is added for
+your client and the current channel you are (called
+b_client_is_priority_speaker).
+
+Note on when channel based permissions are applied
+--------------------------------------------------
+Whenever you try to do something that logically applies to a certain channel
+(e.g. join a channel, kick a user in a channel, edit a channels name...) your
+permissions will be checked as if you were a member of the affected channel.
+This mean that permissions that you receive on channel level (Tier 3, Tier 4
+and Tier 5) will only allow (or disallow) actions that apply to the channel you
+receive them in, and will not affect channel specific actions in other
+channels. Also note that permissions that do not logically apply to a specific
+channel, for example b_virtualserver_modify_name work as you might have
+expected: When you receive them through a channel based Tier, you will only be
+able to edit the virtualserver name as long as you are in the correct channel.
+
+Who can edit the permission system?
++++++++++++++++++++++++++++++++++++
+
+The permission system also decides who is allowed to edit the permission system
+itself, usually a task that only administrators will be trusted with.
+
+Creating and Removing Groups
+----------------------------
+To create a server group,  you need b_virtualserver_servergroup_create
+To delete a server group,  you need b_virtualserver_servergroup_delete
+To create a channel group, you need b_virtualserver_channelgroup_create
+To delete a channel group, you need b_virtualserver_channelgroup_delete
+
+Adding and Removing Clients to/from Groups
+------------------------------------------
+
+To add a client into a server or channel group you need a
+i_group_member_add_power value that is greater or equal than the
+i_group_needed_member_add_power of the specific group. Analogously you will
+need a i_group_member_remove_power that is greater or equal to the
+i_group_needed_member_remove_power of the specific group.
+Additionally for either removing or adding a client from or into a group your
+i_client_permission_modify_power must be greater or equal to the clients
+i_client_needed_permission_modify power.
+
+Adding, Removing and Editing Permissions
+----------------------------------------
+All of the following questions need to be answered with "Yes" when adding,
+removing or editing a permission on any layer:
+(1) Does the editing client have a Grant-Power for the concerened permission
+    with a value that is not zero?
+(2) Is the editing clients i_permission_modify_power greater or equal to the
+    Grant-Power for the concerned permission of the editing client?
+(3) When editing i_permission_modify_power, i_group_modify_power,
+    i_client_permission_modify_power, i_channel_permission_modify_power,
+    i_channel_modify_power, i_group_member_add_power,
+	i_group_member_remove_power or any of the i_needed_modify_power_*
+	permissions (which are also called Grant-Permissions), you cannot set a
+	higher value than the value you have yourself.
+
+Depending on where this permission is edited the following additional checks
+are made:
+Editing Permissions in a Server Group (Tier 1):
+- Is the editing clients i_group_modify_power greater or equal to the
+  i_group_needed_modify_power of the group being edited?
+Editing Client Permissions (Tier 2):
+- Is the editing clients i_client_permission_modify_power greater or equal to
+  the edited clients i_client_needed_permission_modify_power
+Editing Channel Permissions (Tier 3):
+- Is the editing clients i_channel_permission_modify_power greater or equal to
+  the i_channel_needed_permission_modify_power that is configured on the
+  channel
+Editing Permissions in a Channel Group (Tier 4):
+- Is the editing clients i_group_modify_power greater or equal to the
+  i_group_needed_modify_power of the group being edited?
+Editing Channel and Client Specific Permissions (Tier 5):
+- Is the editing clients i_client_permission_modify_power greater or equal to
+  the edited clients i_client_needed_permission_modify_power
+- Is the editing clients i_channel_permission_modify_power greater or equal to
+  the i_channel_needed_permission_modify_power that is configured on the
+  channel
+
+
+Auto-Updating Permissions
+-------------------------
+Whenever the Permission System gets updated, the server will automatically try
+to assign the new permissions to your existing groups. To enable auto-updating,
+simply add a value for i_group_auto_update_type of the target group. The
+following values are available:
+
+Value 10: The group will be handled like 'Channel Guest'
+Value 15: The group will be handled like 'Server Guest'
+Value 20: The group will be handled like 'Query Guest'
+Value 25: The group will be handled like 'Channel Voice'
+Value 30: The group will be handled like 'Server Normal'
+Value 35: The group will be handled like 'Channel Operator'
+Value 40: The group will be handled like 'Channel Admin'
+Value 45: The group will be handled like 'Server Admin'
+Value 50: The group will be handled like 'Query Admin'
+
+As you can see, each of these values represents a group from the default
+permission set of the TeamSpeak 3 Server. For example, if the Permission System
+is updated with a new permission for Server Admins, all groups having their
+i_group_auto_update_type set to 45 will be updated automatically.

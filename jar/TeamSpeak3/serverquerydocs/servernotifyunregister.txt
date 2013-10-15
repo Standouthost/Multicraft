@@ -1,0 +1,8 @@
+Usage: servernotifyunregister
+
+Unregisters all events previously registered with servernotifyregister so you 
+will no longer receive notification messages.
+
+Example:
+   servernotifyunregister
+   error id=0 msg=ok

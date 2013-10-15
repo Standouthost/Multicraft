@@ -1,0 +1,9 @@
+Usage: serverstop sid={serverID}
+
+Stops the virtual server specified with sid. Depending on your permissions, 
+you're able to stop either your own virtual server only or all virtual servers 
+in the server instance.
+
+Example:
+   serverstop sid=1
+   error id=0 msg=ok

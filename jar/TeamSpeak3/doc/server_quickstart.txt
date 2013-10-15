@@ -1,0 +1,432 @@
+=====================================
+TeamSpeak 3 Server - Quickstart Guide
+=====================================
+
+Copyright (c) TeamSpeak Systems GmbH
+
+-----------------------
+(1) System requirements
+-----------------------
+
+(i) Windows
+Windows 2000, XP, 2003, 2003 R2, 2008, Vista, 7 and 2008 R2. Both 32bit and 64bit 
+are natively supported.
+
+(ii) Linux
+A reasonably modern Linux environment with libstdc++ 6 is required. Both 32bit
+and 64bit are natively supported. In addition, TeamSpeak 3 requires the epoll 
+API which was introduced in Linux kernel 2.5.44. Support was added to glibc 
+in version 2.3.2.
+
+(iii) Mac OS X
+Mac OS X 10.3.9 or better on Macs with Intel or PowerPC processors.
+
+For details, please visit:
+
+http://www.teamspeak.com/?page=requirements
+
+----------------
+(2) Installation
+----------------
+
+(i) Windows
+
+Download the correct file for your architecture:
+ - teamspeak3-server_win32.zip for 32bit Windows
+ - teamspeak3-server_win64.zip for 64bit Windows
+
+We recommend running the TeamSpeak 3 Server from the command shell. Extract the 
+archive in a directory of your choice. Open the command shell and change path to 
+this directory. From here you can start the server executable.
+
+Example (32bit):
+ $ cd C:\ts3server\teamspeak3-server_win32
+ $ ts3server_win32.exe
+
+Example (64bit):
+ $ cd C:\ts3server\teamspeak3-server_win64
+ $ ts3server_win64.exe
+
+(ii) Linux
+
+Download the correct file for your architecture:
+ - teamspeak3-server-linux_x86.tar.gz for 32bit Linux
+ - teamspeak3-server-linux_amd64.tar.gz for 64bit Linux
+
+Extract the archive in a directory of your choice and run the TeamSpeak 3 Server 
+binary.
+
+Example (On Screen):
+$ tar xzf teamspeak3-server-linux_x86.tar.gz
+$ cd teamspeak3-server-linux_x86
+$ ./ts3server_minimal_runscript.sh
+
+Example (Background):
+$ tar xzf teamspeak3-server-linux_x86.tar.gz
+$ cd teamspeak3-server-linux_x86
+$ ./ts3server_startscript.sh
+
+*** ATTENTION ***
+
+In some cases, the server process terminates on startup and the error message reads 
+"Server() error while starting servermanager, error: instance check error".
+
+As long as you don't have a license key embededded we make sure you only run exactly 
+one instance of the TS3 server free unregistered version. We use shared memory to 
+facilitate the communication to detect other running instances, which requires tmpfs 
+to be mounted at /dev/shm. If you (for whatever reason) do not have this mounted, the 
+above error will occur.
+
+To fix this problem, the following commands or file edits need to be done as root user 
+(or using something like sudo). This is a temporary fix until your next reboot.
+
+ mount -t tmpfs tmpfs /dev/shm
+
+Now, to make sure this mount is done automatically upon reboot edit the file /etc/fstab 
+and add the line:
+
+ tmpfs /dev/shm tmpfs defaults 0 0
+
+(iii) Mac OS X
+
+Download the file teamspeak3-server-mac.zip, which includes an universal
+binary running on both Intel and PowerPC Macintosh computers. Copy the archive 
+into a directory of your choice and extract it using Finder or the Terminal 
+application.
+
+$ unzip teamspeak3-server_mac.zip
+$ cd teamspeak3-server_mac
+$ ./ts3server_mac
+
+----------------
+(3) License File
+----------------
+
+To run a TeamSpeak 3 Server instance with more than a single virtual server
+and 32 slots you require a license file. The license can be obtained here:
+
+https://sales.teamspeakusa.com/
+
+Without a proper license file available the server will refuse to start or 
+fallback to limited functionality. Once the license file is available, copy 
+it into the TeamSpeak 3 Server directory, where the server executable is located.
+
+-----------------------------
+(4) Server Output and Logfile
+-----------------------------
+
+On Linux and Mac OS X the server will print its log output to the console in
+which you started it. In addition the log output is written into several files,
+located in the logs/ subdirectory.
+
+*** NOTE ***
+
+On Windows, the server will only write the logfile, there is no console output.
+
+-------------------
+(5) Virtual Servers
+-------------------
+
+Like with TeamSpeak 2, the server process serves as a container for multiple
+virtual servers running within the same process. When the server process is
+started, one virtual voice server will be automatically created unless the
+"create_default_virtualserver=0" commandline parameter is specified.
+
+The first virtual server will be running on port 9987 by default. Subsequently
+started virtual servers will be running on increasing port numbers. The second
+on 9998, the third on 9999 etc. The first default port can be changed by 
+specifying the "default_voice_port=<port>" commandline parameter.
+
+Virtual servers are always unique, marked by an unique identifier. Hence it is
+not possible to start the same virtual server within a second server process.
+
+--------------------------
+(6) Commandline Parameters
+--------------------------
+
+Commandline parameters are passed to the TeamSpeak 3 Server using the form:
+
+ts3server_<arch> <parameter1>=<value1> [<parameter2>=<value2>] ...
+
+Important: All commandline parameters passed to the server need to be escaped
+using the ServerQuery escape patterns (check the ServerQuery manual for details).
+
+Example:
+$ ./ts3server_minimal_runscript.sh clear_database=1 create_default_virtualserver=0
+
+Commandline parameters are not saved over sessions, so if you passed paramaters
+when starting the server process, you need to pass them again the next time. If
+a parameter is not specified, the default value will be used, regardless of
+parameters specified during a previous server start.
+
+The following commandline parameters are available:
+
+* default_voice_port (9987)
+  UDP port open for clients to connect to. This port is used by the first 
+  virtual server, subsequently started virtual servers will open on increasing 
+  port numbers.
+  Default: The default voice port is 9987.
+
+* voice_ip (0.0.0.0)
+  IP on which the server instance will listen for incoming voice connections.
+  Default: The server is bound on any IP address.
+
+* create_default_virtualserver (1)
+  Normally one virtual server is created automatically when the TeamSpeak 3
+  Server process is started. To disable this behaviour, set this parameter
+  to "0". In this case you have to start virtual servers manually using the
+  ServerQuery interface.
+  Default: If not provided, one virtual server is created.
+
+* machine_id (<empty>)
+  Optional name of this server process to identify a group of servers with
+  the same ID. This can be useful when running multiple TeamSpeak 3 Server
+  instances on the same database. Please note that we strongly recommend that
+  you do NOT run multiple server instances on the same SQLite database.
+  Default: The server instance will not use a machine ID.
+
+* filetransfer_port (30033)
+  TCP Port opened for file transfers. If you specify this parameter, you also 
+  need to specify the "filetransfer_ip" parameter!
+  Default: The default file tranfer port is 30033.
+  
+* filetransfer_ip (0.0.0.0)
+  IP on which the file transfers are bound to. If you specify this parameter, 
+  you also need to specify the "filetransfer_port" parameter!
+  Default: File transfers are bound on any IP address.
+
+* query_port (10011)
+  TCP Port opened for ServerQuery connections. If you specify this parameter, 
+  need to specify the "query_ip" parameter!
+  Default: The default ServerQuery port is 10011.
+
+* query_ip (0.0.0.0)
+  IP bound for incoming ServerQuery connections. If you specify this parameter, 
+  you also need to specify the "query_port" parameter!
+  Default: ServerQuery connections are bound on any IP address.
+
+* clear_database (0)
+  If set to "1", the server database will be cleared before starting up the server. 
+  This is mainly used for testing. Usually this parameter should not be specified, 
+  so all server settings will be restored when the server process is restarted.
+  Default: Database is not cleared on start.
+
+* logpath (logs/)
+  The physical path where the server will create logfiles.
+  Default: The server will create logfiles in the "logs/" subdirectory.
+
+* dbplugin (ts3db_sqlite3)
+  Name of the database plugin library used by the server instance. For example, if
+  you want to start the server with MySQL support, simply set this parameter to
+  "ts3db_mysql" to use the MySQL plugin. Do *NOT* specify the "lib" prefix or the file 
+  extension of the plugin.
+  Default: The default SQLite3 database plugin will be used.
+  
+* dbpluginparameter (<empty>)
+  A custom parameter passed to the database plugin library. For example, the MySQL
+  database plugin supports a parameter to specify the physical path of the plugins
+  configuration file.
+  Default: The database plugin will be used without a parameter.
+
+* dbsqlpath (sql/)
+  The physical path where your SQL script files are located.
+  Default: The server will search for SQL script files in the "sql/" subdirectory.
+
+* dbsqlcreatepath (create_sqlite/)
+  The physical path where your SQL installation files are located. Note that this 
+  path will be added to the value of the "dbsqlpath" parameter.
+  Default: The server will search for SQL installation scripts files in the 
+  "<dbsqlpath>/dbsqlcreatepath/" subdirectory.
+  
+* licensepath (<empty>)
+  The physical path where your license file is located.
+  Default: The license file is located in your servers installation directory.
+  
+* createinifile (0)
+  If set to "1", the server will create an INI-style config file containing all 
+  commandline parameters with the values you have specified.
+  Default: The server will not create a config file.
+  
+* inifile (ts3server.ini)
+  The physical path where your config file is located. Per default, the config file will
+  be called "ts3server.ini".
+  Default: The config file is located in your servers installation directory.
+  
+* query_ip_whitelist (query_ip_whitelist.txt)
+  The file containing whitelisted IP addresses for the ServerQuery interface. All hosts
+  listed in this file will be ignored by the ServerQuery flood protection.
+  Default: The whitelist file is located in your servers installation directory.
+  
+* query_ip_backlist (query_ip_backlist.txt)
+  The file containing backlisted IP addresses for the ServerQuery interface. All hosts
+  listed in this file are not allowed to connect to the ServerQuery interface.
+  Default: The whitelist file is located in your servers installation directory.
+
+* dbclientkeepdays (90)
+  Defines how many days to keep unused client identities. Auto-pruning is triggered on every 
+  start and on every new month while the server is running.
+  Default: The server will auto-prune client identities older than 90 days.
+    
+* logquerycommands (1)
+  If set to "1", the server will log every ServerQuery command executed by clients. This can
+  be useful while trying to diagnose several different issues.
+  Default: ServerQuery commands will not be logged.
+  
+* no_permission_update (0)
+  If set to "1", new permissions will not be added to existing groups automatically. Note that
+  this can break your server configuration if you dont update them manually.
+  Default: New permissions will be added to existing groups automatically.
+
+* open_win_console (0)
+  If set to "1", the server will open a console window. Note that this only affects Windows 
+  servers.
+  Default: The console will be hidden on Windows.
+
+* no_password_dialog (0)
+  If set to "1", the server will not display the initial password dialog on the first start. 
+  Note that this only affects Windows servers.
+  Default: The initial password dialog will be shown.
+  
+* dbconnections (10)
+  The number of database connections used by the server. Please note that changing this value
+  can have an affect on your servers performance. Possible values are 2-100.
+  Default: The server will use 10 database connections.
+  
+* logappend (0)
+  If set to "1", the server will not create a new logfile on every start. Instead, the log
+  output will be appended to the previous logfile. The logfile name will only contain the
+  ID of the virtual server.
+  Default: The server will create a new logfile on every start.
+
+------------------------------------
+(7) Using Alternate Database Plugins
+------------------------------------
+
+(i) MySQL plugin
+
+To make your TeamSpeak 3 Server use a MySQL database you need to make sure that the
+"ts3db_mysql" library is located in your servers installation directory. Per default,
+the plugin is using the following parameters:
+
+* host (127.0.0.1)
+  The hostname or IP addresss of your MySQL server.
+
+* port (3306)
+  The TCP port of your MySQL server.
+  
+* username (root)
+  The username used to authenticate with your MySQL server.
+
+* password (<empty>)
+  The password used to authenticate with your MySQL server.
+
+* database (test)
+  The name of a database on your MySQL server. Note that this database must be created
+  before the TeamSpeak 3 Server is started.
+  
+* socket (<empty>)
+  The name of the Unix socket file to use, for connections made via a named pipe to a 
+  local server.
+  
+All parameters can be customized by creating a INI-style configuration file called 
+"ts3db_mysql.ini". For example:
+
+[config]
+host=localhost
+port=3306
+username=teamspeak
+password=x5gUjs
+database=ts3db
+socket=
+
+The path and filename of the configuration file can be set using the "dbpluginparameter"
+commandline parameter.
+
+To start the TeamSpeak 3 Server with MySQL support, you need to specify the "dbplugin"
+commandline parameter. You may also need to specify the "dbsqlcreatepath" parameter if
+you're starting the server instance for the first time since the syntax of the MySQL
+installation files differs from SQLite3.
+
+Example:
+$ ./ts3server_linux_amd64 dbplugin=ts3db_mysql dbsqlcreatepath=create_mysql/
+
+-------------------------------
+(8) Gaining Adminstrator Access
+-------------------------------
+
+(i) Regular clients
+
+The first time a virtual server is created, a server administrator token will
+be automatically created in the server log with the following form:
+
+--------------------------------------------------------
+ServerAdmin token created, please use the line below
+token=ppEa0Wp6hopKBzKhH5RiUtb5Ggve5aI8J7ifu+/P
+--------------------------------------------------------
+
+This token can be used in the TeamSpeak 3 Client to gain administrator permissions 
+for the currently logged in client. A token can only be used *ONCE*.
+
+The server log is written to a file in the logs subdirectory. On Linux and Mac OS X 
+it is also printed to the console from which the server was started.
+
+(ii) ServerQuery clients
+
+To gain global administration permissions for ServerQuery access, the first time 
+the server instance is started a ServerQuery password is printed to the console 
+output:
+
+------------------------------------------------------------------
+                      I M P O R T A N T
+------------------------------------------------------------------
+              Server Query Admin Acccount created
+         loginname= "serveradmin", password= "BAIPwM8X"
+------------------------------------------------------------------
+
+Use the provided login name and password to access the server using the ServerQuery 
+interface.
+
+Note: The ServerQuery password is only shown *ONCE* when the server is started for 
+the first time, so make sure you save this information for future reference. The only 
+way to generate a new token and password would be to delete the server database by 
+starting server with the "clear_database=1" commandline paramater or deleting the file 
+ts3server.sqlitedb. In this case all server settings and user accounts would be lost.
+
+-----------------------------------------------
+(9) Understandng the Status of a Virtual Server 
+-----------------------------------------------
+
+The status of a virtual server can be:
+
+* online
+  The virtual server is running and clients can connect
+  
+* offline
+  The virtual server is not running
+  
+* booting up
+  The virtual server is currently starting
+  
+* shutting down
+  The virtual server is currently shutting down
+  
+* deploy running
+  The virtual server is currently deploying a snapshot
+  
+* virtual online
+  The virtual server is running *isolated* and clients cannot connect
+  
+* other instance
+  The virtual server is running in another TeamSpeak 3 instance
+
+Whenever you select a virtual server which is currently stopped, it will be started in 
+virtual mode which means you are able to change its configuration, create channels or 
+change permissions, but no regular TeamSpeak 3 Client can connect. As soon as the last 
+ServerQuery client deselects the virtual server (command: "use 0") or closes connection, 
+its status will be changed back to "offline".
+
+*** IMPORTANT ***
+
+Changing a virtual servers status from "virtual online" to "offline" is an asynchronous 
+operation so it is possible that a virtual server will still be in the process of shutting 
+down when you try to start it right after deselcting it.

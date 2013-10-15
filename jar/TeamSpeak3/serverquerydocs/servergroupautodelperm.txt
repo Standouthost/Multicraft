@@ -1,0 +1,26 @@
+Usage: servergroupautodelperm sgtype={type} permid={permID}|permid={permID}|...
+       servergroupautodelperm sgtype={type} permsid={permName}|...
+
+Removes a set of specified permissions from ALL regular server groups on all 
+virtual servers. The target groups will be identified by the value of their
+i_group_auto_update_type permission specified with sgtype. Multiple permissions 
+can be removed at once. A permission can be specified by permid or permsid.
+
+The known values for sgtype are:
+
+ 10: Channel Guest
+ 15: Server Guest
+ 20: Query Guest
+ 25: Channel Voice
+ 30: Server Normal
+ 35: Channel Operator
+ 40: Channel Admin
+ 45: Server Admin
+ 50: Query Admin
+
+Examples:
+   servergroupautodelperm sgtype=45 permid=8470|permid=8475
+   error id=0 msg=ok
+
+   servergroupautodelperm sgtype=45 permsid=b_virtualserver_modify_maxclients
+   error id=0 msg=ok

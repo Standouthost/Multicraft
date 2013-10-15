@@ -1,0 +1,1 @@
+update clients set client_login_name=:client_login_name:, client_login_password=:client_login_password: where client_id=:client_id: and server_id=:server_id:;

@@ -1,0 +1,1 @@
+select * from :table: where perm_id = "i_group_auto_update_type" and perm_value = :permvalue:

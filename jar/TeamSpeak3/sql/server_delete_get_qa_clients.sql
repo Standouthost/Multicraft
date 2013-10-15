@@ -1,0 +1,1 @@
+SELECT clients.client_id FROM group_server_to_client, clients WHERE group_server_to_client.id1 = clients.client_id and clients.server_id=:server_id: and group_server_to_client.server_id=0;

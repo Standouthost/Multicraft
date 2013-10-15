@@ -695,7 +695,7 @@ if [ "$STEAM_DEBUGGER" == "gdb" ] || [ "$STEAM_DEBUGGER" == "cgdb" ]; then
 		unset LD_PRELOAD
 	fi
 
-	$STEAM_DEBUGGER -x "$ARGSFILE" "$STEAMROOT/$PLATFORM/$STEAMEXE" "$@"
+	$STEAM_DEBUGGER -x "$ARGSFILE" --args "$STEAMROOT/$PLATFORM/$STEAMEXE" "$@"
 	rm "$ARGSFILE"
 elif [ "$STEAM_DEBUGGER" == "valgrind" ]; then
 	DONT_BREAK_ON_ASSERT=1 G_SLICE=always-malloc G_DEBUG=gc-friendly valgrind --error-limit=no --undef-value-errors=no --suppressions=$PLATFORM/steam.supp $STEAM_VALGRIND "$STEAMROOT/$PLATFORM/$STEAMEXE" "$@" 2>&1 | tee steam_valgrind.txt

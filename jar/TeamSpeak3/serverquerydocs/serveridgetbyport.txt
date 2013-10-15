@@ -1,0 +1,9 @@
+Usage: serveridgetbyport virtualserver_port={serverPort}
+
+Displays the database ID of the virtual server running on the UDP port 
+specified by virtualserver_port.
+
+Example:
+   serveridgetbyport virtualserver_port=9987
+   server_id=1
+   error id=0 msg=ok

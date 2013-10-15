@@ -1,0 +1,1 @@
+select * from clients where client_id=:client_id: and server_id=:server_id:;

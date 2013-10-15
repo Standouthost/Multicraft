@@ -1,0 +1,1 @@
+select * from info where ident = :ident:;                           

@@ -1,0 +1,1 @@
+delete from complains where complain_from_client_id = :complain_from_client_id: and server_id = :server_id: and complain_to_client_id = :complain_to_client_id:;

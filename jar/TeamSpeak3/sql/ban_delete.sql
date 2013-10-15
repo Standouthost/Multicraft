@@ -1,0 +1,1 @@
+delete from bans where server_id=:server_id: and ban_id=:ban_id:;

@@ -1,0 +1,1 @@
+select * from servers where server_id = :server_id:;

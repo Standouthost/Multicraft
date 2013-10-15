@@ -1,0 +1,1 @@
+select client_id, client_nickname, client_unique_id from :table:, clients where group_id = :group_id: and id1=client_id;

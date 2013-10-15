@@ -1,0 +1,11 @@
+Usage: servercreate [virtualserver_properties...]
+
+Creates a new virtual server using the given properties and displays its ID and 
+initial administrator token. If virtualserver_port is not specified, the server 
+will test for the first unused UDP port.
+
+Example:
+   servercreate virtualserver_name=TeamSpeak\s]\p[\sServer 
+    virtualserver_port=9988 virtualserver_maxclients=32
+   sid=7 token=HhPbcMAMdAHGUip1yOma2Tl3sN0DN7B3Y0JVzYv6 virtualserver_port=9988
+   error id=0 msg=ok

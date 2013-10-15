@@ -1,0 +1,694 @@
+=============================================================
+              TeamSpeak 3 - Server Changelog
+             Copyright TeamSpeak Systems GmbH
+                 http://www.teamspeak.com
+=============================================================
+           + Added feature or noticable improvement
+           - Bug fix or something removed
+           * Changed or Information
+           ! Important - Take note!
+=============================================================
+
+=== Server Release 3.0.6.1 29 June 2012
+ !	fixed broken weblist
+
+=== Server Release 3.0.6 21 June 2012
+ - fixed broken queryclient database deletion
+ + complaints got some magic to prevent abusing
+ + complaints adding/deletion get logged (client logging need to be enabled)
+ + bans adding/deletion get logged (client logging need to be enabled)
+ + notifychannelgrouplist / notifyservergrouplist added i_group_needed_modify_power, 
+   i_group_needed_member_add_power and i_group_needed_member_remove_power  values
+ + added permission b_channel_create_modify_with_force_password
+ + added permission b_client_is_sticky (sticks a client to current channel)
+ + added permission b_client_ignore_sticky (ignores sticky flag)
+ * Compress command packets to reduce network traffic (voice and filetransfer
+   will not be affected)
+    
+=== Server Release 3.0.5 23 April 2012
+ ! MySQL users, please alter your table server_properties and extend the "value" field 
+   from varchar(255) to varchar(2048)
+ ! privilegekeylist no longer shows groups which does not match
+   i_group_needed_member_add_power and/or i_group_member_add_power
+ + added possibility to give a channel password when creating a temporary
+   server password (check docs for details)
+ * the following actions will reset client idletime:
+   logview, clientdblist, complainlist, complainadd, talkower grant and revoke
+ + clientlist can also show ips (paramter -ip)
+ - fixed an issue were channel properties saved two times on create or edit
+ - fixed an issue were clientdbdelete did not delete avatar files correctly
+ - fixed invalid ident names for virtualserver_antiflood_points_needed_command_block and 
+   virtualserver_antiflood_points_needed_ip_block (breaks client-side serveredit below version 3.0.6)
+ 
+=== Server Release 3.0.3 19 March 2012
+! permissions updated to revision 14
++ added temporary serverpasswords (servertemppasswordadd, servertemppassworddel, servertemppasswordlist)
+  check docu for details
++ added new permission b_client_request_talker to control who can request talk power  
++ added new permission b_client_avatar_delete_other to allow deleting avatars from other clients
++ ftinitdownload and ftinitupload shows binded ips
+- fixed queryclient antiflood bug
+
+=== Server Release 3.0.2 29 February 2012
+! anti spam system reworked
+  - removed virtualserver_antiflood_points_needed_warning, virtualserver_antiflood_points_needed_kick,
+    virtualserver_antiflood_points_needed_ban, virtualserver_antiflood_ban_time
+  - added virtualserver_antiflood_points_needed_command_block
+    - stops executing of commands, no ban is invoked anymore
+  - added virtualserver_antiflood_points_needed_ip_block
+    - prevents from connecting, no ban is invoked
+! mysql users please alter all fields in tables "servers" and "clients" regarding download/
+  upload from "int unsigned" to "bigint unsigned"
++ whoami shows client_origin_server_id (server which the client does belong too)
++ addded servergroupautodelperm and servergroupautoaddperm bound to b_permission_modify_power_ignore (check docu for details)
+- fixed empty channeledit command invoked an channeledit message to clients
+- fixed query ban message had no line endings
+- fixed issue with permlist commands giving not correct error back on an empty list
+
+=== Server Release 3.0.1 17 nov 2011
+! removed database logging (sqlite users please manually do an vacuum on your database)
+! we got now a logfile for every virtualserver and one general
+! logview command revoked, please check docs for details
+! added new start parameter logappend
+  starting the instance with logappend=1 will append the logfile and wont create
+  a new one on each instance start
+! removed client_login_name and client_login_password properties from snapshots
+* properties CHANNEL_ICON_ID and CLIENT_ICON_ID wont be stored anymore in database
+- fixed bug within server deploy (correct snapshot returned invalid_client_id)
+- command serverlist -all returns "other_instance" for virtualserver_status if
+  the virtualserver belongs to an other instance
+- some improvements for quering virtualservers regarding machine_id parameter
+- command servercreate wont need an virtualserver_name anymore, will use the
+  template default name instead
+- fixed guest client can set channel_icon_id and channel_flag_password
+- fixed b_client_skip_channelgroup_permissions == 0 only overwrites skipped 
+  permission if negated
+- fixed that channel deletion with parent channels gives wrong log output
+- fixed token could be created in an channel where you dont got correct permissions
+
+=== Server Release 3.0.0 10 Aug 2011
+! disable_db_logging set to true by default
++ serversnapshotdeploy can deploy into a new virtualserver now, to archive this do a "use 0"
+  just before the command
++ clients table got a new field "client_lastip" where we store last ip used by the client
+- clientdbinfo, clientdblist, clientdbfind does show client_lastip
+- fixed clientdblist count parameter returned always 1
+- fixed issue where server kept status virtual_online while using logout command
+- fixed problem where a channel you could not subscribe was not automatically
+  unsubscribed when you left it
+- fixed issue where VIRTUALSERVER_ASK_FOR_PRIVILEGEKEY && VIRTUALSERVER_AUTOGENERATED_PRIVILEGEKEY
+  where exported/imported through a snapshot
+- fixed issues with channel permission wont take values from clientchannel permissions
+- fixed multiple complains by one user possibility if autoban count is set to two
+- fixed strange serverquery password behavior
+- improved client traffic reset performance
+- improved database performance
+ 
+=== Server Release 3.0.0-rc1 23 May 2011
+! mysql users, please alter your table channel_properties and 
+  extend the "value varchar(255)" field to varchar(8192)
+! mysql users, please alter your table bans and 
+  extend the "ban_name varchar(255)" field to varchar(2048)
+! server uses now 10 database connections (sqlite and mysql)
+! added new parameter "dbconnections" for defining max database
+  connections to use (2-100) default is 10
+! i_group_auto_update_type values changed  
+* channel permissions got their own needed/power permissions instead 
+  of using the group labeled ones
+* renamed i_client_modify_power > i_client_permission_modify_power
+          i_client_needed_modify_power > i_client_needed_permission_modify_power 
+          i_client_max_clones > i_client_max_clones_uid
++ added new parameter "disable_db_logging" which turns off logging
+  to database (logview commands wont work anymore)
++ added the TSDNS server to the server installer. Read the documentation in
+  the "tsdns" subfolder for details
++ added permissions i_channel_delete_power, i_channel_needed_delete_power
+        i_channel_permission_modify_power, i_channel_needed_permission_modify_power
++ added permission i_group_auto_update_max_value
++ added permissions i_client_needed_whisper_power and i_client_whisper_power
+  that determine who can whisper to whom
++ Added total bytes transfered by filetransfer to serverinfo, hostinfo and
+  server connectioninfo
++ improved permission add/delete performance
++ channelgroupaddperm, channelgroupdelperm, servergroupaddperm, servergroupdelperm added
+  optional parameter "continueonerror" 
++ uploading and deleting of icons will be logged if filetransfer log is enabled  
++ added some indexes for speedup lookups regarding servers.server_port and messages.message_flag_read
++ added permission b_virtualserver_change_template
++ serveredit and serverinfo command can be used with use 0 to modify and display
+  virtualserver template values (serverinfo display is different from normal output!)
++ added server property VIRTUALSERVER_HOSTBANNER_MODE:
+	HostBannerMode_NO_ADJUST=0
+	HostBannerMode_ADJUST_IGNORE_ASPECT=1
+	HostBannerMode_ADJUST_KEEP_ASPECT=2
+- fixed bogus mysql create script for channel_properties
+- default groups cant be permanent anymore
+- removing double group assignements on server start
+- fixed problem where multi-line client descriptions where stored in database
+- fixed query gave out wrong error messages
+- fixed permreset did not remove icon_id assignments
+- fixed double assigned permissions where deleted completly
+- fixed channelmove / channelcreate not checking b_channel_create_child and i_channel_needed_modify_power
+- fixed sql parameter errors while inserting defaults.sql
+- fixed not removing privilege key on channel deletion
+- fixed snapshotdeploy would fail on virtualserver_max_slots / virtualserver_limit reached
+- fixed not checking correct permissions for CHANNEL_FLAG_MAXFAMILYCLIENTS_UNLIMITED,
+  CHANNEL_FLAG_MAXFAMILYCLIENTS_INHERITED
+- fixed not checking notifyregister / notifyunregister permissions
+- fixed server critical while using notifyregister=server and multiple queries dropping at the same time
+- fixed set channelgroup did not include channel name info in server log
+- fixed create subchannel did not include parent channel info in server log
+- fixed issue mac osx server uses 100% cpu
+- Fixed a bug that could be triggered remotely and would cause the server to
+  shut down with a critical message in the log file.
+
+=== Server Release 3.0.0-beta30 23 Nov 2010
+! new tcp stack
+! instance_properties respect now machine_id
+! updated to sqlite 3.7.3
+! clientdbfind returns a max of 50 rows
+! clientdblist duration limited to a max of 200 rows
++ reduced CPU usage for large servers
++ ServerQuery: added server port to "whoami" output
++ ServerQuery: added client_created and client_lastconnected times to output
+  of "clientlist" when "-times" parameter is passed. Value is in seconds since
+  1970.
++ ServerQuery: added parent id to output of "channelinfo"
++ new channel/server group get new default permissions 
+  i_group_needed_member_add_power based on i_group_member_add_power
+  i_group_needed_member_remove_power based on i_group_member_remove_power
++ added permission i_group_sort_id
+  commands notify notifyservergrouplist / notifychannelgrouplist output "sortid" field
++ added permission i_group_show_name_in_tree
+  commands notify notifyservergrouplist / notifychannelgrouplist output "namemode" field
++ added new PluginTargetMode PluginCommandTarget_CURRENT_CHANNEL_SUBSCRIBED_CLIENTS  
++ servergroupclientlist uses now internal id/uid/name cache which results in faster
+  processing and lower database usage
++ query and template groups accept only local icon_ids  
++ added command line option "no_password_dialog" which prevents showing the password dialog
+  on windows (eg. no_password_dialog=1)
++ added new command "permget" (check docu for details)
++ added permission b_client_permissionoverview_own
++ added servernotifyregister event "tokenused"
++ windows tray icon shows now your wan ip 
+- fixed problem handling malformated client requests that could lead to the
+  server shutting down after logging a critical log message.
+- fixed issue that lead to clients not being able to edit the slot count back to
+  the value that was set when they originally connected to the server
+- fixed serversnapshotdeploy using wrong sql file on failure
+- fixed issue with servernotifyregister not unregistering serverquery clients
+  on remote connection closed
+- fixed bug with temporary channels not being deleted immediately when a
+  sub-channel was moved out of them and they so became empty
+- fixed bug that lead to the output of the ServerQuery command "hostinfo" to
+  display wrong data in the bandwidth last minute and bandwidth last second
+  fields
+- fixed channel client permissions where not removed on channel delete
+- fixed possibility to host more slots than allowed
+- fixed bug where a clone leaving server removed temp groups of still connected 
+  clones
+- fixed client which where added to query groups wont be correctly removed
+  on serverdelete/clientdelete  
+- fixed serverprocessstop works again under windows
+- fixed client channel/server groups got not updated while changing 
+  default groups
+- server traffic quota reset script respects machine_id  
+- fixed clientinfo on a serverquery can cause a crash
+- fixed client disconnect closes wrong clientserverquery connection
+- fixed wrong handling VIRTUALSERVER_WEBLIST_ENABLED
+
+=== Server Release 3.0.0-beta29 29 Sep 2010
+! Voice packets are now not transfered encrypted by default. Added options to
+  configure this behavior on virtual server or per channel level. Clients of
+  versions beta29 and earlier will not be able to communicate with new clients.
+! removed permission i_client_kick_power and i_client_needed_kick_power
+! certain log messages, like query and accounting wont go anymore
+  to the database
+! serverquery sends between the ts3 prompt also a new welcome message
+! token functions renamed to privilegekey (privilegekeyadd, privilegekeydelete, privilegekeyuse, privilegekeylist)
+  old function names are still working but will be removed.
++ added permissions i_client_kick_from_server_power, i_client_needed_kick_from_server_power
+  i_client_kick__from_channel_power, i_client_needed_kick_from_channel_power
++ added permissions b_channel_modify_make_codec_encrypted, b_virtualserver_modify_codec_encryption_mode
++ client kick from channel wont check for i_client_needed_move_power / i_client_move_power
+- fixed clientIDCache issues
+- property "instance_uptime" is now in seconds since 1970
+- fixed removing an offline client from channelgroup wont be logged
+- fixed issues with serversnapshotdeploy and using invalid filepaths
+- fixed issues with serversnapshotdeploy and writing zero database entries
+- fixed issues with serversnapshotdeploy where a failed deploy left invalid
+  data 
+- fixed users are shown in weblist, even when a server with reserved slots is empty
+
+=== Server Release 3.0.0-beta28 09 Sep 2010
+! Changed the way some text message characters are escaped. You now require
+  at least beta26 clients to connect to the server.
++ if VIRTUALSERVER_MAXCLIENTS is zero and VIRTUALSERVER_HOSTMESSAGE_MODE is
+  HostMessageMode_MODALQUIT the client shows
+  the VIRTUALSERVER_HOSTMESSAGE
++ clientlist serverquery command now accepts "-country" flag
+- clientlist serverquery command prints client_flag_talking again when -voice
+  is passed
+- fixed bug that could lead to failing asserts on big endian system when
+  clients connected
+- handle EINTR on linux systems, which should prevent a critical error
+  concerning the epoll_wait call that some people were seeing
+- fixed weblist shows full server, when reserved slots are available
+- fixed bug where clients could connect to the server with empty nick names
+  which in turn could cause other clients to terminate
+- fixed bug that could lead to other clients terminating when you connected
+  to the server with multiple cloned clients and changed your avatar
+
+=== Server Release 3.0.0-beta27 06 Aug 2010
+- fixed bug that could lead to crashes on servers with incorrect time source
+- fixed problem with epoll_ctl and linux kernel <= 2.6.9
+
+=== Server Release 3.0.0-beta26 29 Jul 2010
++ introduced webserverlist
++ added servergroupcopy and channelgroupcopy commands (check docu for details)
++ server welcome messages are now allowed to be multi-line
++ windows uses now a trayicon, use commandline parameter "open_win_console=1" 
+  if you want to open an console window
++ query command serverlist got new optional parameter "-onlyoffline" which
+  shows only virtualservers which are not running (check docu for details)  
++ added client property CLIENT_COUNTRY, contains country code for the client
+  which is extracted from the used ip  
++ added support for whisper to servergroups, channelgroups, channelcommander
++ clientlist shows CLIENT_IS_CHANNELCOMMANDER (with option -voice)
++ clientinfo shows CLIENT_IP (you need the b_client_remoteaddress_view permission for that)
+- unsubscribe client from channel on clientmove if client does not got the
+  needed subscribepower  
+- fixed clientdblist and "-count" showing always zero
+- fixed bug with reserved slots that could allow admins that did not have the
+  privilege to modify the max slot count to let more clients onto their server
+  than specified in the max slot count setting.
+- fixed bug where auto pruned clients could lead to a critical
+- fixed plugincommand where we used the channel subscriber list instead
+  of real client members only.
+- fixed that antiflood options needed an virtualserver restart to take affect  
+! query command "use" wont start a virtualserver in virtualmode anymore without
+  given optional parameter "-virtual" 
+! interval client pruning disabled
+
+=== Server Release 3.0.0-beta25 17 Jun 2010
++ added CLIENT_ICON_ID to clientlist (parameter -icon)
++ added CHANNEL_ICON_ID to channellist (parameter -icon)
++ added permission i_channel_description_view_power and i_channel_needed_description_view_power
++ starscript and runscript will now work even when executed from a different
+  location than the server installation folder
++ added serverquery command clientdbinfo (check docu for details)
++ added permission b_virtualserver_client_dbinfo  
++ added new parameter "-count" to clientdblist which gives a property "count" with
+  total available client count
++ serverquery commands servergrouppermlist, channelgrouppermlist, channelpermlist, clientpermlist
+  and channelclientpermlist added new optional parameter "-permsid". gives permID strings instead
+  of numbers as output
++ added permission b_client_use_channel_commander
+- fixed bug where servergrouplist and channelgrouplist wont check for querygroup permissions
+- fixed bug where it was not possible to delete channelgroup templates
+- permission update respects "machine_id"
+  NOTE: server_id 0 groups, templates will be updated in any case
+- client pruning respects "machine_id"
+- fixed that virtualserver_uptime isnt correct in certain cases
+  for serverinfo, serverlist query commands
+- fixed CHANNEL_ICON_ID shown incorrectly in channelinfo
+- fixed VIRTUALSERVER_ICON_ID shown incorrectly in serverinfo
+- fixed invalid channeldescriptionchanged event while creating new channels
+- fixed bug that lead to temporary server groups not being properly cleared
+  when a client dropped instead of disconnect
+- fixed bug where when a client dropped that was muted by some other client
+  this other client could incorrectly mute some third uninvolved client
+! fixed several vulnerabilities
+  
+! beta24 skipped
+  
+=== Server Release 3.0.0-beta23 01 Jun 2010
++ if logquerycommands is active display a log entry for query clients
+  which got banned because of flooding/to many password tries
++ servergroupadd / channelgroupadd take new parameter type (check docu for details)  
++ added virtualserver property VIRTUALSERVER_RESERVED_SLOTS
++ added permission b_virtualserver_modify_reserved_slots
++ added permission b_client_use_reserved_slot
++ added possibility for reserved slots 
++ added permission i_client_modify_power
++ added permission i_client_needed_modify_power
++ permission tiers "client" and "channelclient" respects i_client_modify_power and
+  i_client_needed_modify_power
++ via commandline parameter no_permission_update=1 new permissions wont be 
+  added automatically (this can break your server if you dont update them
+  manually)
++ new permissions are now automatically added (i_group_auto_update_type needs
+  to be setup correctly)
++ added permission i_channel_create_modify_with_codec_latency_factor_min
++ added permission b_channel_modify_codec_latency_factor
+- removed unnecessary glibc dependency on linux x86 and amd64
+- improved virtualserver startup time
+- fixed bug where icon_id wont work for channel client permissions
+- fixed bug in permfind which could lead to a crash
+- changing template groups or query group memberships no longer 
+  requires an instance restart
+- fixed possibly server crash exploit
+- fixed possibly server deadlock / query connection stall
+- fixed crash in mysql database plugin while shutdown
+! VIRTUALSERVER_UPTIME is now seconds
+! permission "skip flag" skips now Channel, ChannelGroup
+! clients added to serverquery groups need to be assigned to serverID == 0.
+  If you have added any clients to one of your serverquery groups, you'll need
+  to update your database manually to retain functionality. All serverquery
+  group assignments are stored in a database table called
+  "group_server_to_client". To update your existing serverquery group
+  assignments, please execute this command on your database:
+  UPDATE group_server_to_client SET server_id = 0 WHERE
+    group_id = <YOUR_QUERY_GROUP_ID>;
+
+=== Server Release 3.0.0-beta22 13 April 2010
+- fixed possible crash while executing serverlist
+- clientinfo shows client_icon_id in correct int format
+- clientpermlist wont send cldbid to serverquery clients
+  also returns error_database_empty_result instead of an error_ok
+  if no entries were found
+- fixed that a semi-permanent channel could be created inside an temporary  
+- via commandline parameter dbpluginparameter=skipcheck the sqlite database integrity
+  checks can be skipped
+- fixed that filetransfer quoatas were not reset correctly  
+- we now respect the b_client_ban_delete_own permission
+- fixed not recognizing channel permissions while using defaultchannels on client connect
+
+=== Server Release 3.0.0-beta21 30 March 2010
+- deleting an servergroup dont updated the CLIENT_SERVERGROUPS property correctly
+- fixed TLS problems under windows based operating systems
+- fixed serverlist gives back status "unknown" if server is actually just offline
+- fixed possible crash while using permfind
+- fixed possible crash while selecting a server via serverquery
+- fixed possible, rare, deadlock while shutting down a virtualserver
++ added virtualserver property virtualserver_hostbutton_gfx_url
++ added serverlist command option -short which gives only id, port, status back
++ added permission b_client_modify_own_description
++ added a ip blacklist for the query
++ added command line option "query_ip_blacklist", defines filename
+  for the query ip blacklist
++ query ip blacklist and whitelist understand Classless Inter-Domain Routing notation (cidr)
+  e.g: 0.0.0.0/0 for blacklist will refuse all incoming connections
+! new permission i_group_auto_update_type which enables
+  auto-updating for server groups and channel groups whenever the permission system gets
+  updated. supported values: 0-8 (check permissiondoc.txt for details) note that existing
+  groups on all virtual servers need to be updated manually since we cannot detect the purpose
+  of an existing group automatically
+ 
+=== Server Release 3.0.0-beta20 10 March 2010
+- fixed channel/client icons not shown correctly in certain setups
+- remove unwanted /r/n sequences while reading query_ip_whitelist.txt
+
+=== Server Release 3.0.0-beta19 9 March 2010
+- fixed i_client_max_avatar_filesize / i_group_max_icon_filesize not checking for -1
+- banlist wont hide anymore certain properties
+- fixed possible serverstart race which lead to messed up serverproperties
+- fixed talk request timestamp not populated properly
++ clientdblist added property CLIENT_TOTALCONNECTIONS
++ improved multithreading / scability 
++ serverstart works now also for virtualservers which are in virtualmode
++ added server properties VIRTUALSERVER_NAME_PHONECTIC, VIRTUALSERVER_ICON_ID
++ added channel properties CHANNEL_ICON_ID
++ added client properties CLIENT_ICON_ID
++ clientlist added property CLIENT_IS_RECORDING (option: -voice)
++ added permissions b_virtualserver_modify_icon_id
+! removed "group" from i_icon_id, i_max_icon_filesize, b_icon_manage
+
+=== Server Release 3.0.0-beta18 08 Feb 2010
+- fixed possible servercreate race by an serverstart
+- fixed case where an servercreate was delayed by several minutes
+- fixed permission overview permid=0 not recognized
+- fixed bug where traffic quotas where not reset correctly on each new month
+- fixed PERMISSION_b_permission_modify_power_ignore not working in certain setups
+- fixed snapshotdeploy wont set correct channel id for channelgroups
++ added support for serversite group icons (needs client build >= 10183)
++ added i_group_max_icon_filesize, defines max filesize for serversite icons
++ added b_group_icon_manage, defines if client is able to upload/delete/browse icons
++ its now possible to give ether permid=int_value or permsid=string_value for 
+  all given permission functions
+
+=== Server Release 3.0.0-beta17 02 Feb 2010
+- fixed possible crash while deleting subchannels
+- clientlist option -VOICE added CLIENT_IS_PRIORITY_SPEAKER property
+- fixed issue where query could start an stopped virtualserver while
+  instance terminating
+- fixed channel_flag_password was not set automatically while creating
+  a new channel over query  
+- fixed strange behavior while changing b_group_is_permanent permission value
+- fixed licensing issue with max slots below 32
+- query_ip_whitelist.txt removed out of package and is created if not available
+- fixed PERMISSION_b_client_channel_textmessage_send not working properly
+- fixed ghosting channel bug with certain default sub channel setups
+- fixed critical after editing an perm/semi channel to an temp
+- fixed unclear local accounting error messages
+- fixed query bug which resulted in "invalid socketID" errors
++ added custominfo command (check docu for details)  
++ added permissions PERMISSION_b_client_custom_info_view
++ added permidgetbyname command (check docu for details)
++ added b_virtualserver_permission_reset
++ added command permreset (check docu for details)
+! added b_permission_modify_power_ignore permission, allows to 
+  add/delete permissions without having the needed grant values
+! added command line parameter dblogkeepdays (default 90)
+  defines how many days to keep database log entries
+  (triggered on every start and while running every day)
+! added command line parameter dbclientkeepdays (default 30)
+  removes all clients which had not connected the x days and dont
+  got an servergroup assigned
+  (triggered on every start and while running every day)
+
+=== Server Release 3.0.0-beta16 20 Jan 2010
+- default query anti flood properties changed to be less strict
+- added warning while using machine_id and no servers got loaded
+- fixed possible exception in query core on certain linux derivates
++ query_ip_whitelist.txt auto reloads every five minutes
+  entries are displayed to logfile, first time and every time they changed
+  while reloading
++ reduce memory usage
++ shut down server cleanly on unix systems even when receiving SIGINT,
+  SIGHUP and SIGTERM
+
+=== Server Release 3.0.0-beta15 18 Jan 2010
+- fixed mysql plugin reading config file
+
+=== Server Release 3.0.0-beta13 18 Jan 2010
+! To connect to a beta13 server you MUST update your client to beta11 or
+  higher
+- fixed 64bit database id mismatch
+- reject big packets which could lead to server criticals
+- fixed bug where none permanent groups wont display members
+- channelgroupclientlist returns ERROR_database_empty_result
+- fixed talk power can be granted without permission
+- fixed not checking max bantime correclty
+- fixed bug where group members / permission where not removed from database
+- client request talk message size limit increased to 50 characters
+- correctly reject talk requests with oversize message
+- when manually adding a ban apply this ban to all matching clients that are
+  currently connected
+- work around convert error that could occure when setting some values to "-1"
+  on some glibc versions
+- fixed clientdbdelete not checking if client is online and removing all permissions
+- respect b_client_ignore_bans on renames also
+- fixed filetransfer permission checks
+- fixed bug where it was not possible to connect via query if VIRTUALSERVER_MAXCLIENTS was set to zero
+- fixed accounting deadlock which could occur while shutting down an virtualserver
++ added virtualserver_port to servercreate output
++ added new permission PERMISSION_b_virtualserver_custom_search
++ added query command customsearch (please check docu)
++ added sqlite PRAGMA integrity_check on startup
++ added table custom fields
++ tokenadd can take optional parameter tokendescription and tokencustomset
++ token table extended with token_created, token_description, token_customset fields
++ added query ip whitelist, entries wont be affected by flood protection
++ added command line option query_ip_whitelist (default query_ip_whitelist.txt)
++ added CLIENT_IDLE_TIME to clientlist (parameter -times)
++ added channel id to clientinfo, ident: cid
++ server accepts token while connecting
++ added checks for default/template groups
++ disconnect query after to many failed password tries
++ complain added to flood protection (middle)
++ added virtualservers_total_maxclients, virtualservers_total_clients_online, virtualservers_total_channels_online to hostinfo
++ added servergroups got default permission PERMISSION_b_group_is_permanent
++ added servergroups/channelgroups got default permission PERMISSION_i_group_needed_modify_power (current clients PERMISSION_i_group_modify_power is used)
++ new permission PERMISSION_b_virtualserver_modify_min_client_version
++ new virtualserver property VIRTUALSERVER_MIN_CLIENT_VERSION
++ windows crash dump wont display an dialog box anymore
++ added check to prevent deleting needed template groups
++ added flood protection for serverquery
++ added SERVERINSTANCE_SERVERQUERY_FLOOD_COMMANDS, SERVERINSTANCE_SERVERQUERY_FLOOD_TIME, SERVERINSTANCE_SERVERQUERY_BAN_TIME to instance properties
+! you cant remove clients from groups which do not
+  belong to your virtualserver (postponed feature)
+! make sure that the changes below reflect your setup else you will break your server
++ added SERVERINSTANCE_TEMPLATE_SERVERDEFAULT_GROUP, SERVERINSTANCE_TEMPLATE_CHANNELADMIN_GROUP,
+  SERVERINSTANCE_TEMPLATE_CHANNELDEFAULT_GROUP this properties are used now while creating
+  a new virtualserver for selecting the needed groups. 
+
+=== Server Release 3.0.0-beta12 31 Dec 2009
+- fixed overlooked case where a client could post a talk request although
+  is_talker was granted
+- fixed general channel create behaviour
+- fixed sendServerGroupClientList database usage problems
++ added CLIENT_IS_TALKER to clienlist (parameter -voice)
++ VIRTUALSERVER_ANTIFLOOD_POINTS_TICK_REDUCE cant be zero
+
+=== Server Release 3.0.0-beta11 29 Dec 2009
+- throw an ERROR_client_to_many_clones_connected while connecting 
+  instead of an PERMISSION_i_client_max_clones permission error
+- clear CLIENT_IS_TALKER, CLIENT_TALK_REQUEST and CLIENT_TALK_REQUEST_MSG
+  they are no longer required to talk.
+- properly handle PERMISSION_i_channel_max_depth and PERMISSION_i_channel_min_depth
+  while creating a channel
++ added CLIENT_ID to whoami
+- remove log spam that occured when oversized UPD packets were received
+
+=== Server Release 3.0.0-beta10 27 Dec 2009
+- Fixed bug that could lead to the server sending UDP packets with the
+  network interface max capacity. Only systems with a instable system clock
+  were affected.
+- Fixed a deadlock that could freeze the server so it no longer responded 
+- fixed PERMISSION_b_channel_delete_* behaviour
+- prevent a memleak using pthread_create that could lead to a CRITICAL error
+  message when the filetransfer port was attacked by many thousand connections
++ text messages added to flood protection (small)
+! clientdblist takes now optional parameters "start" and "duration"
+  default values are start=0, duration=25
+
+=== Server Release 3.0.0-beta9 26 Dec 2009
+- prevent denial of service on filetransfer port, that could also cause ASSERT failures
+
+=== Server Release 3.0.0-beta8 25 Dec 2009
+- fixed possible crash while unregistering a query client
+- fixed possible case where clients got deleted from wrong groups
++ added CLIENT_IDLE_TIME, CONNECTION_CONNECTED_TIME to clientinfo
++ added CLIENT_VERSION, CLIENT_PLATFORM to clientlist (new parameter -info)
++ added VIRTUALSERVER_UNIQUE_IDENTIFIER to serverlist (new parameter -uid)
+! VIRTUALSERVER_HOSTBANNER_GFX_INTERVAL dont accepts values between 1-59
+
+=== Server Release 3.0.0-beta7 24 Dec 2009
+- minor tcp stack improvements
++ added permission log entries for changing default groups
+! updated to sqlite 3.6.21
+
+=== Server Release 3.0.0-beta6 23 Dec 2009
+- fixed PERMISSION_i_client_needed_move_power not taking all aspects into account
+- fixed PERMISSION_b_channel_modify_sortorder not used
+- fixed tcp flooding bug
++ dont print company name for none profit licenses to logfile
++ added crashdump support for win32/win64
+
+=== Server Release 3.0.0-beta5 22 Dec 2009
+- query password ban returns now a proper error message
+- channelgroup && servergroup deleting checks for modify power
+- fixed possibility that you set PERMISSION_i_group_needed_modify_power beyond
+  your own power
+- fixed not checking PERMISSION_i_client_move_power correctly while clientmove
+- fixed possibly deadlock  
++ added permission PERMISSION_b_virtualserver_modify_priority_speaker_dimm_modificator
+  you need to manually add this permission if you are upgrading the server
++ added PERMISSION_b_virtualserver_modify_log_settings  
+  you need to manually add this permission if you are upgrading the server
+! + added VIRTUALSERVER_LOG_CLIENT, VIRTUALSERVER_LOG_QUERY, VIRTUALSERVER_LOG_CHANNEL
+        VIRTUALSERVER_LOG_PERMISSIONS, VIRTUALSERVER_LOG_SERVER, VIRTUALSERVER_LOG_FILETRANSFER
+  to virtualserver properties
+  default logging disabled except for permissions
+! default permissions are more end-user friendly
+! beta4 skipped
+
+=== Server Release 3.0.0-beta3 21 Dec 2009
+- tokenadd checks for PERMISSION_i_group_needed_member_add_power
+- fixed tokenadd with channel groups not used correctly
+- handle select failures for tcp connections more properly
+- fixed PERMISSION_b_channel_join_ignore_maxclients
++ client nickname change added to flood protection (small)
++ clientpoke added to flood protection (middle)
++ inform windows users about the virtualserver token
+
+=== Server Release 3.0.0-beta2 20 Dec 2009
+- fixed rare server crash (while reconnecting client)
+- fixed bug with serverdblist updating client_nickname fields
+- fixed permission problem with channel groups
++ serverstop can return ERROR_server_is_not_running 
++ poke message got a max character limit of 100
+! added PERMISSION_b_client_issue_client_query_command
+  enables/disables the internal gui client serverquery function
+- fixed bug that lead to the server connection info values overflowing
+  at 2^31
+
+=== Server Release 3.0.0-beta1 19 Dec 2009
+- fixed typo for bandwidth properties
+- fixed VIRTUALSERVER_MAXCLIENTS behaviour in virtual mode
++ fixed mysql problem while editing virtualserver error database_no_modifications
++ added query password brute force protection
++ serverinfo shows also VIRTUALSERVER_QUERYCLIENTS_ONLINE
++ VIRTUALSERVER_NAME increased to 64 chars
+
+=== Server Release 3.0.0-alpha4-pre-7 17 Dec 2009
++ use command extended to use also a port usage: use port=9987 (please check docu)
++ serverinfo also gives virtualserver_status
+- clientdblist shows correct timestamps
+- servercreate handles virtualserver_password correctly
+- fixed query socket reusing bug
+
+=== Server Release 3.0.0-alpha4-pre-6 16 Dec 2009
+- servercreate accepts now virtualserver_autostart, virtualserver_machine_id
+- mysql set MYSQL_OPT_RECONNECT to true
++ added commandline parameter "createinifile" (default name "ts3server.ini")
+  usage example: binary createinifile=1
++ added commandline parameter "inifile"
+  usage example: binary inifile=ts3server.ini
++ added commandline parameter "dbpluginparameter" (check docu for details)
++ added VIRTUALSERVER_NEEDED_IDENTITY_SECURITY_LEVEL (check docu for details)
+! Protocol change. Old clients can not connect to new servers and new clients
+  can not connect to old servers. preparition for our open beta.
+
+=== Server Release 3.0.0-alpha4-pre-5 15 Dec 2009
+- added missing mysql create/drop files
+
+=== Server Release 3.0.0-alpha4-pre-4 14 Dec 2009
+- VIRTUALSERVER_PORT, VIRTUALSERVER_AUTOSTART, VIRTUALSERVER_MACHINE_ID
+  can be edited while virtualserver is running, changes take effect after
+  manual restart
+- we prevent using tokenadd with template groups
++ mysql support added, please check server_quickstart.txt
+  - if you encounter problems, we need logs, mysql version
+    operating system, etc
+
+=== Server Release 3.0.0-alpha4-pre-3 12 Dec 2009
++ added commandline parameter "logpath"
+  usage example: binary logpath=logs
++ serverdelete adds an logentry
+- fixed CLIENT_IS_TALKER behaviour
+- handle autoprobe errors more gracefully
+
+=== Server Release 3.0.0-alpha4-pre-2 10 Dec 2009
+- autoprobing fixes
+  - fixed invalid virtualserver_port property after autoprobing (was -1)
+  - takes also stopped servers into account (machine_id is ignored)
+  - make sure every new autoprobe request starts from beginning
++ enable plugins to send command packets
++ banadd, banclient displays bandid (check docu for details)
++ added commandline parameter "licensepath"
+  usage example: binary licensepath=e:\\ts3license\\
+
+=== Server Release 3.0.0-alpha3 08 Dec 2009
+- fixed broken ban time under windows
+
+=== Server Release 3.0.0-alpha2 07 Dec 2009
+- fixed invalid ban timestamp
+- fixed dead group member entries after group deletion
+- fixed bug where a serverdelete cleared up the whole filebase
+
+=== Server Release 3.0.0-alpha1 04 Dec 2009
+- if an virtualserver is unable to start just throw an error instead
+  of shutting down the whole intance
+- fixed a bug which could lead to a deadlock while adding a new
+  server with a port already in use
+! virtualserver which is in virtualmode will automatically shutdown
+  after last client(query) left
+! servercreate returns also the token needed to get serveradmin  
++ added command serveridgetbyport (check docu for details)
++ added command permfind (check docu for details)
+
+=== Server Release r8910 01 Dec 2009
+* Initial public server release
+

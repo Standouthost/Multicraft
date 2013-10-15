@@ -1,0 +1,1 @@
+insert into :table: (server_id, id1, id2, perm_id, perm_value, perm_negated, perm_skip) values (:server_id:, :id1:, :id2:, :perm_id:, :perm_value:, :perm_negated:, :perm_skip:)

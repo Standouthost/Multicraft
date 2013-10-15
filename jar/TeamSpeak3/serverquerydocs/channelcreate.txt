@@ -1,0 +1,8 @@
+Usage: channelcreate channel_name={channelName} [channel_properties...]
+
+Creates a new channel using the given properties and displays its ID.
+
+Example:
+   channelcreate channel_name=My\sChannel channel_topic=My\sTopic
+   cid=16
+   error id=0 msg=ok

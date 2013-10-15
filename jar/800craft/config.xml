@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fCraftConfig version="158">
+  <Settings>
+    <!--General-->
+    <ConfigKey key="ServerName" value="Custom Minecraft Server (800Craft)" default="Custom Minecraft Server (800Craft)" />
+    <ConfigKey key="CustomChatName" value="EngineerChat" default="EngineerChat" />
+    <ConfigKey key="CustomAliasName" value="En" default="En" />
+    <ConfigKey key="SwearName" value="%CBlock" default="%CBlock" />
+    <ConfigKey key="MOTD" value="Welcome to the server!" default="Welcome to the server!" />
+    <ConfigKey key="MaxPlayers" value="20" default="20" />
+    <ConfigKey key="MaxCaps" value="8" default="8" />
+    <ConfigKey key="MaxPlayersPerWorld" value="20" default="20" />
+    <ConfigKey key="DefaultRank" value="" default="" />
+    <ConfigKey key="IsPublic" value="False" default="false" />
+    <ConfigKey key="Port" value="25565" default="25565" />
+    <ConfigKey key="UploadBandwidth" value="100" default="100" />
+    <!--Chat-->
+    <ConfigKey key="RankColorsInChat" value="True" default="true" />
+    <ConfigKey key="RankColorsInWorldNames" value="True" default="true" />
+    <ConfigKey key="RankPrefixesInChat" value="False" default="false" />
+    <ConfigKey key="RankPrefixesInList" value="False" default="false" />
+    <ConfigKey key="ShowConnectionMessages" value="True" default="true" />
+    <ConfigKey key="ShowJoinedWorldMessages" value="True" default="true" />
+    <ConfigKey key="SystemMessageColor" value="yellow" default="yellow" />
+    <ConfigKey key="CustomChatColor" value="yellow" default="yellow" />
+    <ConfigKey key="HelpColor" value="lime" default="lime" />
+    <ConfigKey key="SayColor" value="green" default="green" />
+    <ConfigKey key="AnnouncementColor" value="green" default="green" />
+    <ConfigKey key="PrivateMessageColor" value="aqua" default="aqua" />
+    <ConfigKey key="MeColor" value="purple" default="purple" />
+    <ConfigKey key="WarningColor" value="red" default="red" />
+    <ConfigKey key="AnnouncementInterval" value="0" default="0" />
+    <ConfigKey key="GCKey" value="True" default="true" />
+    <!--Worlds-->
+    <ConfigKey key="DefaultBuildRank" value="" default="" />
+    <ConfigKey key="MapPath" value="maps" default="maps" />
+    <!--Security-->
+    <ConfigKey key="VerifyNames" value="Balanced" default="Balanced" />
+    <ConfigKey key="MaxConnectionsPerIP" value="0" default="0" />
+    <ConfigKey key="AllowUnverifiedLAN" value="False" default="false" />
+    <ConfigKey key="PatrolledRank" value="" default="" />
+    <ConfigKey key="AntispamMessageCount" value="4" default="4" />
+    <ConfigKey key="AntispamInterval" value="5" default="5" />
+    <ConfigKey key="AntispamMuteDuration" value="5" default="5" />
+    <ConfigKey key="AntispamMaxWarnings" value="2" default="2" />
+    <ConfigKey key="PaidPlayersOnly" value="False" default="false" />
+    <ConfigKey key="RequireBanReason" value="False" default="false" />
+    <ConfigKey key="RequireKickReason" value="False" default="false" />
+    <ConfigKey key="RequireRankChangeReason" value="False" default="false" />
+    <ConfigKey key="AnnounceKickAndBanReasons" value="True" default="true" />
+    <ConfigKey key="AnnounceRankChanges" value="True" default="true" />
+    <ConfigKey key="AnnounceRankChangeReasons" value="True" default="true" />
+    <ConfigKey key="BlockDBEnabled" value="True" default="true" />
+    <ConfigKey key="BlockDBAutoEnable" value="True" default="true" />
+    <ConfigKey key="BlockDBAutoEnableRank" value="" default="" />
+    <!--SavingAndBackup-->
+    <ConfigKey key="SaveInterval" value="90" default="90" />
+    <ConfigKey key="BackupOnStartup" value="False" default="false" />
+    <ConfigKey key="BackupOnJoin" value="False" default="false" />
+    <ConfigKey key="BackupOnlyWhenChanged" value="True" default="true" />
+    <ConfigKey key="DefaultBackupInterval" value="20" default="20" />
+    <ConfigKey key="MaxBackups" value="0" default="0" />
+    <ConfigKey key="MaxBackupSize" value="0" default="0" />
+    <ConfigKey key="BackupDataOnStartup" value="True" default="true" />
+    <ConfigKey key="HbSaverKey" value="True" default="true" />
+    <!--Logging-->
+    <ConfigKey key="LogMode" value="OneFile" default="OneFile" />
+    <ConfigKey key="MaxLogs" value="0" default="0" />
+    <!--IRC-->
+    <ConfigKey key="IRCBotEnabled" value="False" default="false" />
+    <ConfigKey key="IRCBotNick" value="MinecraftBot" default="MinecraftBot" />
+    <ConfigKey key="IRCBotNetwork" value="irc.esper.net" default="irc.esper.net" />
+    <ConfigKey key="IRCBotPort" value="6667" default="6667" />
+    <ConfigKey key="IRCBotChannels" value="#changeme" default="#changeme" />
+    <ConfigKey key="IRCBotForwardFromServer" value="False" default="false" />
+    <ConfigKey key="IRCBotForwardFromIRC" value="False" default="false" />
+    <ConfigKey key="IRCBotAnnounceServerJoins" value="False" default="false" />
+    <ConfigKey key="IRCBotAnnounceIRCJoins" value="False" default="false" />
+    <ConfigKey key="IRCBotAnnounceServerEvents" value="True" default="true" />
+    <ConfigKey key="IRCRegisteredNick" value="False" default="false" />
+    <ConfigKey key="IRCNickServ" value="NickServ" default="NickServ" />
+    <ConfigKey key="IRCNickServMessage" value="IDENTIFY passwordGoesHere" default="IDENTIFY passwordGoesHere" />
+    <ConfigKey key="IRCMessageColor" value="purple" default="purple" />
+    <ConfigKey key="IRCUseColor" value="True" default="true" />
+    <ConfigKey key="IRCDelay" value="750" default="750" />
+    <ConfigKey key="IRCThreads" value="1" default="1" />
+    <!--Advanced-->
+    <ConfigKey key="SubmitCrashReports" value="True" default="true" />
+    <ConfigKey key="UpdaterMode" value="Prompt" default="Prompt" />
+    <ConfigKey key="RunBeforeUpdate" value="" default="" />
+    <ConfigKey key="RunAfterUpdate" value="" default="" />
+    <ConfigKey key="BackupBeforeUpdate" value="True" default="true" />
+    <ConfigKey key="RelayAllBlockUpdates" value="False" default="false" />
+    <ConfigKey key="NoPartialPositionUpdates" value="False" default="false" />
+    <ConfigKey key="ProcessPriority" value="Normal" default="Normal" />
+    <ConfigKey key="BlockUpdateThrottling" value="2048" default="2048" />
+    <ConfigKey key="TickInterval" value="100" default="100" />
+    <ConfigKey key="LowLatencyMode" value="False" default="false" />
+    <ConfigKey key="MaxUndo" value="2000000" default="2000000" />
+    <ConfigKey key="MaxUndoStates" value="5" default="5" />
+    <ConfigKey key="ConsoleName" value="(console)" default="(console)" />
+    <ConfigKey key="AutoRankEnabled" value="False" default="false" />
+    <ConfigKey key="HeartbeatEnabled" value="True" default="true" />
+    <ConfigKey key="WoMEnableEnvExtensions" value="False" default="false" />
+    <ConfigKey key="IP" value="0.0.0.0" default="0.0.0.0" />
+    <ConfigKey key="BandwidthUseMode" value="Normal" default="Normal" />
+    <ConfigKey key="RestartInterval" value="0" default="0" />
+  </Settings>
+  <ConsoleOptions>
+    <SystemActivity />
+    <ChangedWorld />
+    <Warning />
+    <Error />
+    <SeriousError />
+    <UserActivity />
+    <UserCommand />
+    <SuspiciousActivity />
+    <GlobalChat />
+    <PrivateChat />
+    <RankChat />
+    <ConsoleOutput />
+    <IRC />
+    <Trace />
+  </ConsoleOptions>
+  <LogFileOptions>
+    <SystemActivity />
+    <ChangedWorld />
+    <Warning />
+    <Error />
+    <SeriousError />
+    <UserActivity />
+    <UserCommand />
+    <SuspiciousActivity />
+    <GlobalChat />
+    <PrivateChat />
+    <RankChat />
+    <ConsoleInput />
+    <ConsoleOutput />
+    <IRC />
+    <Debug />
+    <Trace />
+  </LogFileOptions>
+  <Ranks>
+    <Rank name="owner" id="o7E7w3pn94Jgt2hT" color="red" prefix="+" antiGriefBlocks="0" antiGriefSeconds="0" reserveSlot="true" allowSecurityCircumvention="true" copySlots="4" fillLimit="2048" hidden="false">
+      <Chat />
+      <Build />
+      <Delete />
+      <PlaceGrass />
+      <PlaceWater />
+      <PlaceLava />
+      <PlaceAdmincrete />
+      <DeleteAdmincrete />
+      <ViewOthersInfo />
+      <ViewPlayerIPs />
+      <EditPlayerDB />
+      <Say />
+      <ReadStaffChat />
+      <UseColorCodes />
+      <UseSpeedHack />
+      <Kick max="owner#o7E7w3pn94Jgt2hT" />
+      <Ban max="owner#o7E7w3pn94Jgt2hT" />
+      <BanIP />
+      <BanAll />
+      <Promote max="owner#o7E7w3pn94Jgt2hT" />
+      <Demote max="owner#o7E7w3pn94Jgt2hT" />
+      <Hide />
+      <Draw />
+      <DrawAdvanced />
+      <CopyAndPaste />
+      <UndoOthersActions />
+      <UndoAll />
+      <Teleport />
+      <Bring />
+      <BringAll />
+      <Patrol />
+      <Spectate />
+      <Freeze />
+      <Mute />
+      <SetSpawn />
+      <Lock />
+      <ManageZones />
+      <ManageWorlds />
+      <ManageBlockDB />
+      <Import />
+      <ReloadConfig />
+      <ShutdownServer />
+      <UsePortal />
+      <ManagePortal />
+      <HighFive />
+      <ChatWithCaps />
+      <Swear />
+      <MakeVotes />
+      <MakeVoteKicks />
+      <BroMode />
+      <Troll />
+      <HideRanks />
+      <ReadAdminChat />
+      <ReadCustomChat />
+      <Realm />
+      <Possess />
+      <Gtfo />
+      <RageQuit />
+      <Tower />
+      <TempBan />
+      <Warn />
+      <Slap />
+      <Kill />
+      <Basscannon />
+      <Physics />
+      <Fireworks />
+      <Gun />
+      <Games />
+      <Moderation />
+      <Immortal />
+    </Rank>
+    <Rank name="op" id="O5Te9tuGaLK6chl3" color="aqua" prefix="-" antiGriefBlocks="0" antiGriefSeconds="0" copySlots="3" fillLimit="512" hidden="false">
+      <Chat />
+      <Build />
+      <Delete />
+      <PlaceGrass />
+      <PlaceWater />
+      <PlaceLava />
+      <PlaceAdmincrete />
+      <DeleteAdmincrete />
+      <ViewOthersInfo />
+      <ViewPlayerIPs />
+      <Say />
+      <ReadStaffChat />
+      <UseColorCodes />
+      <UseSpeedHack />
+      <Kick max="op#O5Te9tuGaLK6chl3" />
+      <Ban max="builder#qeZ1S1CGpJyaz1Ni" />
+      <BanIP />
+      <Promote max="builder#qeZ1S1CGpJyaz1Ni" />
+      <Demote max="builder#qeZ1S1CGpJyaz1Ni" />
+      <Hide />
+      <Draw />
+      <DrawAdvanced />
+      <CopyAndPaste />
+      <UndoOthersActions />
+      <Teleport />
+      <Bring />
+      <Patrol />
+      <Spectate />
+      <Freeze />
+      <Mute />
+      <SetSpawn />
+      <Lock />
+      <ManageZones />
+    </Rank>
+    <Rank name="builder" id="qeZ1S1CGpJyaz1Ni" color="white" antiGriefBlocks="47" antiGriefSeconds="6" drawLimit="8000" idleKickAfter="20" copySlots="2" fillLimit="32" hidden="false">
+      <Chat />
+      <Build />
+      <Delete />
+      <PlaceGrass />
+      <PlaceWater />
+      <PlaceLava />
+      <PlaceAdmincrete />
+      <DeleteAdmincrete />
+      <ViewOthersInfo />
+      <UseSpeedHack />
+      <Kick max="builder#qeZ1S1CGpJyaz1Ni" />
+      <Draw />
+      <Teleport />
+    </Rank>
+    <Rank name="guest" id="vJaKfGO6ARxnqRoL" color="silver" antiGriefBlocks="37" antiGriefSeconds="5" drawLimit="512" idleKickAfter="20" copySlots="2" fillLimit="32" hidden="false">
+      <Chat />
+      <Build />
+      <Delete />
+      <UseSpeedHack />
+    </Rank>
+  </Ranks>
+</fCraftConfig>

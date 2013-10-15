@@ -1,0 +1,9 @@
+Usage: hostinfo
+
+Displays detailed configuration information about the server instance including 
+uptime, number of virtual servers online, traffic information, etc.
+
+Example:
+   hostinfo
+   virtualservers_running_total=3 virtualservers_total_maxclients=384 ...
+   error id=0 msg=ok

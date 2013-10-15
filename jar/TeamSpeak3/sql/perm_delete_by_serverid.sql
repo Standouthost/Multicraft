@@ -1,0 +1,13 @@
+delete from perm_channel where server_id = :server_id:;
+delete from perm_channel_clients where server_id = :server_id:;
+delete from perm_channel_groups where server_id = :server_id:;
+delete from perm_client where server_id = :server_id:;
+delete from perm_server_group where server_id = :server_id:;
+delete from group_channel_to_client where server_id = :server_id:;
+delete from group_server_to_client where server_id = :server_id:;
+delete from groups_channel where server_id = :server_id:;
+delete from groups_server where server_id = :server_id:;
+delete from tokens where server_id = :server_id:;
+update client_properties set value = 0 where ident= "client_icon_id" and server_id= :server_id:;
+update channel_properties set value = 0 where ident= "channel_icon_id" and server_id= :server_id:;
+update server_properties set value = 0 where ident= "virtualserver_icon_id" and server_id= :server_id:;

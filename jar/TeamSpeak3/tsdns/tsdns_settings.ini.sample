@@ -1,0 +1,35 @@
+#   ***This is the configuration file for the TSDNS server***
+#
+# The format is always "ident=value", where:
+# ident is a host-name, which should at least for the right hand side be a
+# valid (DNS) host-name. 
+# On a box known via DNS as "myrootserver.com" sensible idents might be
+# "myrootserver.com" or "any.combination.of.weird.words.myrootserver.com".
+# Also allowed is "*" as ident, which defines the default entry which will be
+# used when no other entry matches.
+#
+# The value side is always an IP possibly followed by a ':' and then either
+# a port of the special string "$PORT"
+#
+#
+# Example: The TSDNS server runs on on a box reachable as "teamspeak.com"
+# So we might configure:
+#public.teamspeak.com=12.13.14.15:10000
+#test.teamspeak.com=12.13.14.15:12000
+#private.teamspeak.com=12.13.14.15:14000
+#*=12.13.14.15:$PORT
+#
+#This way, now clients can connect to "test.teamspeak.com" to reach the test
+#server, but if they still have the old "teamspeak.com:12000" in their
+#bookmarks, it will also work thanks to the "*=12.13.14.15:$PORT" line, which
+#acts as a backwards compatibility mechanism in this case, for everybody not
+#using the new TSDNS names to connect.
+#
+# Lines starting with "#" are ignored by the tsdns server, so to make any
+# actual configuration you must remove the "#" infront.
+#
+# Note that if you want to use any non ascii characters you may do so,
+# but you should make sure to store this configuration file as UTF8 encoded
+# document.
+#
+

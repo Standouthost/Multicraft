@@ -1,0 +1,1 @@
+update servers set server_month_upload= 0, server_month_download= 0 where server_machine_id=:machine_id:

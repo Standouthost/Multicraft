@@ -1,0 +1,64 @@
+Usage of the tsdnsserver
+########################
+
+
+Getting Started
++++++++++++++++
+
+1. Edit the settings file called tsdns_settings.ini
+2. Insert any query=result pairs into the new text file, below is an example
+
+----example tsdns_settings.ini----
+foo.bar.host.com=123.34.45.132:5437
+baz.host.com=44.23.55.109.245:11555
+qux.host.com=111.222.33.44:5556
+myotherhostname.com=1.2.3.4
+*=14.5.11.66:$PORT
+----------end of example----------
+
+In the example the server the TSDNS server is running on should be reachable
+via "host.com" and via "myotherhostname.com", the "foo.bar", "baz", "qux"
+prefixes need not be part of a registered domain name, but can be chosen
+arbitrarily.
+If you ommit the port on the right side the default TS3 port (9987) is assumed.
+If you put "$PORT" in place of a real port the connecting client will use the
+port defined on client side.
+If you put "*" on the left side you define a default answer that will be given
+whenever none of the other answers match. In the example if somebody connects
+to "host.com:4500" the TSDNS server will direct them to "14.5.11.66:4500", as
+it cannot find "host.com" on the left side it uses the default entry.
+A line like "*=1.2.3.4:$PORT" is good practise to keep backwards compatibility
+in case you are migrating your users from using "domain:port" to connect to
+TSDNS.
+
+3. Run the tsdnsserver executable. It will report (on the console) any errors
+in the ini file and if all is ok tell you howmany entries it scanned.
+
+
+Updating the tsdns_settings.ini while the tsdnsserver is running
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Simply edit the tsdns_settings.ini file, and then start a (second) tsdnsserver,
+but this time with the parameter "--update" appended to the command line. The
+newly started executable will terminate immediatly, and the old "main" tsdns
+server will note something similar to:
+"Scanned tsdns_settings.ini, number of entries: 56"
+
+
+"Exception: Function not implemented" during startup
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+This error can occur when the interprocess communication that is needed for the
+"--update" parameter to work fails. The reason is often that tmpfs is not
+mounted to /dev/shm
+
+To fix this problem, the following commands or file edits need to be done as
+root user (or using something like sudo). This is a temporary fix until your
+next reboot.
+
+mount -t tmpfs tmpfs /dev/shm
+
+Now, to make sure this mount is done automatically upon reboot edit the file
+/etc/fstab and add the line:
+
+tmpfs /dev/shm tmpfs defaults 0 0 
+
+

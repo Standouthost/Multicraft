@@ -1,0 +1,10 @@
+Usage: channelinfo cid={channelID}
+
+Displays detailed configuration information about a channel including ID, 
+topic, description, etc.
+
+Example:
+   channelinfo cid=1
+   channel_name=Default\sChannel channel_topic=No\s[b]topic[\/b]\shere 
+   channel_description=Welcome ...
+   error id=0 msg=ok

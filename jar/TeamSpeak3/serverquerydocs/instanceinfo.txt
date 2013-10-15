@@ -1,0 +1,10 @@
+Usage: instanceinfo
+
+Displays the server instance configuration including database revision number, 
+the file transfer port, default group IDs, etc. 
+
+Example:
+   instanceinfo
+   serverinstance_database_version=12 serverinstance_filetransfer_port=30033 
+   serverinstance_template_guest_serverquery_group=1...
+   error id=0 msg=ok
