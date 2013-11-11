@@ -86,6 +86,36 @@ if [ $JAR_FILE == 'Dire.jar' ]; then
 else
 	echo "You did not choose Dire"
 fi
+if [ $JAR_FILE == 'YogCraft.jar' ]; then
+	if [ -d $SERVER_DIR/YogCraft ]; then
+		echo "huzzah files"
+        else
+                mkdir $SERVER_DIR/YogCraft
+       	        unzip -o $JAR_DIR/YogCraft.zip -d  $SERVER_DIR/YogCraft/
+	fi
+else
+	echo "You did not choose YogCraft"
+fi
+if [ $JAR_FILE == 'Unhinged.jar' ]; then
+	if [ -d $SERVER_DIR/Unhinged ]; then
+		echo "huzzah files"
+        else
+                mkdir $SERVER_DIR/Unhinged
+       	        unzip -o $JAR_DIR/Unhinged.zip -d  $SERVER_DIR/Unhinged/
+	fi
+else
+	echo "You did not choose Unhinged"
+fi
+if [ $JAR_FILE == 'Unleashed.jar' ]; then
+	if [ -d $SERVER_DIR/Unleashed ]; then
+		echo "huzzah files"
+        else
+                mkdir $SERVER_DIR/Unleashed
+       	        unzip -o $JAR_DIR/Unleashed.zip -d  $SERVER_DIR/Unleashed/
+	fi
+else
+	echo "You did not choose Unleashed"
+fi
 if [ $JAR_FILE == 'MindCrack.jar' ]; then
 	if [ -d $SERVER_DIR/MindCrack ]; then
 		echo "huzzah files"
@@ -215,6 +245,16 @@ if [ $JAR_FILE == 'StarMade.jar' ]; then
 	sleep 5
 	if [ ! -f $SERVER_DIR/StarMade/server.cfg ]; then
 		cp $JAR_DIR/StarMade.cfg $SERVER_DIR/StarMade/server.cfg
+	fi
+fi
+if [ $JAR_FILE == 'mcpc-plus.jar' ]; then
+	cp $JAR_DIR/mcpc-plus.jar $SERVER_DIR/
+fi
+if [ $JAR_FILE == 'minecraftforge.jar' ]; then
+	if [ ! -f $SERVER_DIR/minecraftforge.jar ]; then
+		cp $JAR_DIR/forge.tar.gz $SERVER_DIR/
+		cd $SERVER_DIR
+		tar zxvf $SERVER_DIR/forge.tar.gz
 	fi
 fi
 if [ $JAR_FILE == 'mumble.jar' ]; then
