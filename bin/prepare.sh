@@ -186,17 +186,6 @@ if [ $JAR_FILE == 'tekkit_lite.jar' ]; then
 else
 	echo "You did not choose Tekkit Lite"
 fi
-if [ $JAR_FILE == 'mcpc-plus.jar' ]; then
-	if [ -d $SERVER_DIR/Tekkit_Lite ]; then
-		echo "huzzah files"
-	else
-		mkdir $SERVER_DIR/Tekkit_Lite
-		unzip -o $JAR_DIR/Tekkit_Lite.zip -d $SERVER_DIR/Tekkit_Lite/
-		cp $JAR_DIR/mcpc-plus.jar $SERVER_DIR/Tekkit_Lite/
-	fi
-else
-        echo "You did not choose Tekkit Lite with mcpc-plus"
-fi
 if [ $JAR_FILE == 'tshock.jar' ]; then
 	if [ -d $SERVER_DIR/TShock ]; then
 		echo "huzzah files"
