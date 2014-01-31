@@ -237,6 +237,11 @@ if [ $JAR_FILE == 'StarMade.jar' ]; then
 	fi
 fi
 if [ $JAR_FILE == 'mcpc-plus.jar' ]; then
+	if [ ! -f $SERVER_DIR/mcpc-plus-installer.jar ]; then
+		cp $JAR_DIR/mcpc-plus-installer.jar $SERVER_DIR/
+		cd $SERVER_DIR/
+		java -jar $SERVER_DIR/mcpc-plus-installer.jar --installServer nogui
+	fi
 	cp $JAR_DIR/mcpc-plus.jar $SERVER_DIR/
 fi
 if [ $JAR_FILE == 'minecraftforge.jar' ]; then

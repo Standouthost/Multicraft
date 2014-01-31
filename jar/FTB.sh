@@ -9,4 +9,4 @@ JAVA="$7"
 
 cp "$SERVER_DIR"/server.properties "$SERVER_DIR"/FeedTheBeast/
 cd "$SERVER_DIR"/FeedTheBeast/
-"$JAVA" -Xmx"$MAX_MEMORY"M -Xms"$START_MEMORY"M -Djline.terminal=jline.UnsupportedTerminal -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=4 -XX:+AggressiveOpts -Xincgc -jar "$SERVER_DIR"/FeedTheBeast/ftbserver.jar nogui
+"$JAVA" -Xmx"$MAX_MEMORY"M -Xms"$START_MEMORY"M -Djline.terminal=jline.UnsupportedTerminal -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=4 -XX:PermSize=256m -XX:+AggressiveOpts -Xincgc -jar "$SERVER_DIR"/FeedTheBeast/ftbserver.jar nogui
