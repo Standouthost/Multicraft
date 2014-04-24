@@ -11,9 +11,10 @@ kill -9 "$KILL"
 sed -i 's/.*"MaxPlayers".*/    <ConfigKey key="MaxPlayers" value="'$MAX_PLAYERS'" default="20" \/>/g' $SERVER_DIR/800craft/config.xml
 sed -i 's/.*"Port".*/    <ConfigKey key="Port" value="'$SERVER_PORT'" default="25565" \/>/g' $SERVER_DIR/800craft/config.xml
 
-export PATH=$PATH:/opt/mono/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mono/bin
+#Customize for Deal Me Hosting setup
+export PATH=$PATH:/opt/mono-2.11.4/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mono-2.11.4/bin
 mozroots --import --ask-remove 
 
 cd $SERVER_DIR/800craft
-/opt/mono/bin/mono --gc=sgen $SERVER_DIR/800craft/ServerCLI.exe
+/opt/mono-2.11.4/bin/mono --gc=sgen $SERVER_DIR/800craft/ServerCLI.exe
