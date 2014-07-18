@@ -1,1 +1,0 @@
-insert into messages (server_id, message_from_client_id, message_from_client_uid, message_to_client_id, message_subject, message_msg, message_timestamp) values (:server_id:, :message_from_client_id:, :message_from_client_uid:, :message_to_client_id:, :message_subject:, :message_msg:, :message_timestamp:)

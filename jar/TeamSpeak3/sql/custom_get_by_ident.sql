@@ -1,1 +1,0 @@
-select * from custom_fields where server_id=:server_id: and ident=:ident: and value like(:pattern:);

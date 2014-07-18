@@ -1,9 +1,0 @@
-Usage: serverinfo
-
-Displays detailed configuration information about the selected virtual server 
-including unique ID, number of clients online, configuration, etc.
-
-Example:
-   serverinfo
-   virtualserver_port=9987 virtualserver_name=TeamSpeak\s]I[\sServer virtua...
-   error id=0 msg=ok

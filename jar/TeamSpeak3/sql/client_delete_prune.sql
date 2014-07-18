@@ -1,1 +1,0 @@
-select * from clients where not exists (select id1 from group_server_to_client where id1= clients.client_id) and client_lastconnected < :timestamp: and server_id != 0 limit 100;

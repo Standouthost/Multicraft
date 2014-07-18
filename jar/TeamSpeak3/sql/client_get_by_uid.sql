@@ -1,1 +1,0 @@
-select * from clients where client_unique_id = :client_unique_id: and server_id=:server_id:;

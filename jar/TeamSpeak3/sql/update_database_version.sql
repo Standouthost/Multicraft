@@ -1,1 +1,0 @@
-update instance_properties set value = :value: where ident="serverinstance_database_version";

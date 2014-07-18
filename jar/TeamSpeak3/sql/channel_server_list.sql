@@ -1,1 +1,0 @@
-select channel_id, channel_parent_id from channels where server_id=:server_id:;

@@ -1,1 +1,0 @@
-ALTER TABLE clients ADD COLUMN client_lastip varchar(20);

@@ -1,7 +1,0 @@
-Usage: clientedit clid={clientID} [client_properties...]
-
-Changes a clients settings using given properties.
-
-Example:
-   clientedit clid=10 client_description=Best\sguy\sever!
-   error id=0 msg=ok

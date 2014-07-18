@@ -1,9 +1,0 @@
-Usage: permissionlist
-
-Displays a list of permissions available on the server instance including ID, 
-name and description.
-
-Example:
-   permissionlist
-   permid=21413 permname=b_client_channel_textmessage_send permdesc=Send\ste...
-   error id=0 msg=ok

@@ -1,1 +1,0 @@
-select * from :table: where group_id = :group_id:

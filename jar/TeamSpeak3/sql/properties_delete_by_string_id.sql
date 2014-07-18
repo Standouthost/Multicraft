@@ -1,1 +1,0 @@
-delete from :tablename: where string_id = :string_id: ;

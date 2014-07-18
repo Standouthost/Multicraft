@@ -1,8 +1,0 @@
-Usage: serverdelete sid={serverID}
-
-Deletes the virtual server specified with sid. Please note that only virtual 
-servers in stopped state can be deleted.
-
-Example:
-   serverdelete sid=1
-   error id=0 msg=ok

@@ -1,1 +1,0 @@
-update clients set client_nickname=:client_nickname: where client_id=:client_id: and server_id=:server_id:;

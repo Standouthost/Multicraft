@@ -1,1 +1,0 @@
-update clients set client_month_upload= 0, client_month_download= 0 where server_id=:server_id:;

@@ -1,1 +1,0 @@
-delete from :table: where server_id = :server_id: and group_id = :group_id:

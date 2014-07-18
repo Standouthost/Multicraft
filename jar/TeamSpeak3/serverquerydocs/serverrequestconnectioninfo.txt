@@ -1,9 +1,0 @@
-Usage: serverrequestconnectioninfo
-
-Displays detailed connection information about the selected virtual server 
-including uptime, traffic information, etc.
-
-Example:
-   serverrequestconnectioninfo
-   connection_filetransfer_bandwidth_sent=0 connection_packets_sent_total=0...
-   error id=0 msg=ok

@@ -1,1 +1,0 @@
-select * from servers where server_machine_id= :server_machine_id:;

@@ -1,7 +1,0 @@
-Usage: serveredit [virtualserver_properties...]
-
-Changes the selected virtual servers configuration using given properties.
-
-Example:
-   serveredit virtualserver_name=TeamSpeak\sServer virtualserver_maxclients=32
-   error id=0 msg=ok

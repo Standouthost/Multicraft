@@ -1,1 +1,0 @@
-select * from :table: where server_id = :server_id: and type = :type:

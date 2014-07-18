@@ -1,1 +1,0 @@
-delete from info where ident = :ident:;

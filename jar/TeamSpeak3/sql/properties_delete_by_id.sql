@@ -1,1 +1,0 @@
-delete from :tablename: where id = :id: ;
