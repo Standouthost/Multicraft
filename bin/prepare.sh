@@ -7,12 +7,25 @@
 ## having the following setting in the [useragent] section:
 ## userAgentSuperuserPrepare = prepare.sh
 ##exit 0
+if [ ! -f $SERVER_DIR/server.properties ]; then
+       	exit 1
+fi
+if [ $JAR_FILE == 'pocketmine.jar' ]; then
+	if [ ! -d $SERVER_DIR/PocketMine ]; then
+		mkdir $SERVER_DIR/PocketMine
+	fi
+	ln $SERVER_DIR/server.properties $SERVER_DIR/PocketMine/server.properties
+fi
 if [ $JAR_FILE == 'my.jar' ]; then
 	if [ -d $SERVER_DIR/jars ]; then
 		echo "jars dir exists"
 	else
 		mkdir $SERVER_DIR/jars
 	fi
+        if [ -e $SERVER_DIR/jars/server.properties ]; then
+                rm -f $SERVER_DIR/jars/server.properties
+        fi
+        ln $SERVER_DIR/server.properties $SERVER_DIR/jars/server.properties
 else
 	echo "You did not choose Custom Jar"
 fi
@@ -22,14 +35,17 @@ else
        	echo "You did not choose Vanilla Minecraft"
 fi
 if [ $JAR_FILE == 'BungeeCord.jar' ]; then
-	if [ -f $SERVER_DIR/config.yml ]; then
-		echo "config.yml exists"
-	else
-		cp $JAR_DIR/BungeeCord/config.yml $SERVER_DIR/
-	fi
-	cp $JAR_DIR/BungeeCord.jar $SERVER_DIR/BungeeCord.jar
-else
-	echo "You did not choose BungeeCord"
+        if [ ! -d $SERVER_DIR/BungeeCord ]; then
+                mkdir $SERVER_DIR/BungeeCord
+        fi
+        if [ ! -f $SERVER_DIR/BungeeCord/config.yml ]; then
+                cp $JAR_DIR/BungeeCord/config.yml $SERVER_DIR/BungeeCord/config.yml
+        fi
+        cp $JAR_DIR/BungeeCord.jar $SERVER_DIR/BungeeCord/BungeeCord.jar
+        QPORT=$(expr $PORT + 30000)
+        sed -i "s/host: 0.0.0.0:25577/host: $IP:$QPORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/query_port: 25577/query_port: $QPORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/address: localhost:25565/address: $IP:$PORT/g" $SERVER_DIR/BungeeCord/config.yml
 fi
 if [ $JAR_FILE == 'craftbukkit.jar' ]; then
 	cp $JAR_DIR/craftbukkit.jar $SERVER_DIR/craftbukkit.jar
@@ -115,6 +131,16 @@ if [ $JAR_FILE == 'Unleashed.jar' ]; then
 	fi
 else
 	echo "You did not choose Unleashed"
+fi
+if [ $JAR_FILE == 'BTeam.jar' ]; then
+	if [ -d $SERVER_DIR/BTeam ]; then
+		echo "huzzah files"
+        else
+                mkdir $SERVER_DIR/BTeam
+       	        unzip -o $JAR_DIR/BTeam.zip -d  $SERVER_DIR/BTeam/
+	fi
+else
+	echo "You did not choose BTeam"
 fi
 if [ $JAR_FILE == 'MindCrack.jar' ]; then
 	if [ -d $SERVER_DIR/MindCrack ]; then
@@ -220,6 +246,9 @@ if [ $JAR_FILE == 'samp.jar' ]; then
 	else
 		rsync -avz $JAR_DIR/samp/*  $SERVER_DIR/Samp
 	fi
+for PID in $(ps -ef | grep "$SERVER_DIR" | grep -v grep | awk '{print $2}'); do
+        kill -9 $PID
+done
 else
         echo "You did not choose San Andreas"
 fi
@@ -236,6 +265,9 @@ if [ $JAR_FILE == 'StarMade.jar' ]; then
 		cp $JAR_DIR/StarMade.cfg $SERVER_DIR/StarMade/server.cfg
 	fi
 fi
+if [ $JAR_FILE == 'mcpc-plus164.jar' ]; then
+	cp $JAR_DIR/mcpc-plus164.jar $SERVER_DIR/
+fi
 if [ $JAR_FILE == 'mcpc-plus.jar' ]; then
 	if [ ! -f $SERVER_DIR/mcpc-plus-installer.jar ]; then
 		cp $JAR_DIR/mcpc-plus-installer.jar $SERVER_DIR/
@@ -246,9 +278,10 @@ if [ $JAR_FILE == 'mcpc-plus.jar' ]; then
 fi
 if [ $JAR_FILE == 'minecraftforge.jar' ]; then
 	if [ ! -f $SERVER_DIR/minecraftforge.jar ]; then
-		cp $JAR_DIR/forge.tar.gz $SERVER_DIR/
+		cp $JAR_DIR/minecraftforgeinstaller.jar $SERVER_DIR/
 		cd $SERVER_DIR
-		tar zxvf $SERVER_DIR/forge.tar.gz
+		java -jar $SERVER_DIR/minecraftforgeinstaller.jar --installServer nogui
+		mv $SERVER_DIR/forge-*.jar $SERVER_DIR/minecraftforge.jar
 	fi
 fi
 if [ $JAR_FILE == 'mumble.jar' ]; then
@@ -259,6 +292,46 @@ if [ $JAR_FILE == 'mumble.jar' ]; then
 	fi
 else
 	echo "You did not choose Mumble"
+fi
+
+# BungeeCord
+if [ $JAR_FILE == 'BungeeCord.1.5.2.jar' ]; then
+        if [ ! -d $SERVER_DIR/BungeeCord ]; then
+                mkdir $SERVER_DIR/BungeeCord
+        fi
+        if [ ! -f $SERVER_DIR/BungeeCord/config.yml ]; then
+                cp $JAR_DIR/BungeeCord.1.5.2/config.yml $SERVER_DIR/BungeeCord/config.yml
+        fi
+        cp $JAR_DIR/BungeeCord.1.5.2.jar $SERVER_DIR/BungeeCord/BungeeCord.1.5.2.jar
+        QPORT=$(expr $PORT + 30000)
+        sed -i "s/^.*\shost:.*/  host: $IP:$PORT/g" $SERVER_DIR/BungeeCord/config.yml
+fi
+
+if [ $JAR_FILE == 'BungeeCord.1.6.4.jar' ]; then
+        if [ ! -d $SERVER_DIR/BungeeCord ]; then
+                mkdir $SERVER_DIR/BungeeCord
+        fi
+        if [ ! -f $SERVER_DIR/BungeeCord/config.yml ]; then
+                cp $JAR_DIR/BungeeCord.1.6.4/config.yml $SERVER_DIR/BungeeCord/config.yml
+        fi
+        cp $JAR_DIR/BungeeCord.1.6.4.jar $SERVER_DIR/BungeeCord/BungeeCord.1.6.4.jar
+        QPORT=$(expr $PORT + 30000)
+        sed -i "s/^.*\shost: 0.0.0.0:25577/  host: $IP:$PORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/^.*\squery_port: 25577/  query_port: $QPORT/g" $SERVER_DIR/BungeeCord/config.yml
+fi
+
+if [ $JAR_FILE == 'BungeeCord.1.7.9.jar' ]; then
+        if [ ! -d $SERVER_DIR/BungeeCord ]; then
+                mkdir $SERVER_DIR/BungeeCord
+        fi
+        if [ ! -f $SERVER_DIR/BungeeCord/config.yml ]; then
+                cp $JAR_DIR/BungeeCord.1.7.9/config.yml $SERVER_DIR/BungeeCord/config.yml
+        fi
+        cp $JAR_DIR/BungeeCord.1.7.9.jar $SERVER_DIR/BungeeCord/BungeeCord.1.7.9.jar
+        QPORT=$(expr $PORT + 30000)
+        sed -i "s/^.*\shost: 0.0.0.0:25577/  host: $IP:$PORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/^.*\squery_port: 25577/  query_port: $QPORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/^.*\sip_forward: false/  ip_forward: true/g" $SERVER_DIR/BungeeCord/config.yml
 fi
 
 chown -R mc$SERVER_ID:mc$SERVER_ID "$SERVER_DIR"
