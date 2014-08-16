@@ -17,5 +17,6 @@ if [ $WORLD == 'update' -o $WORLD == 'world' ]; then
 	${SERVER_DIR}/Steam/gmod/srcds_run -game garrysmod -autoupdate -tickrate 66 -maxplayers $PLAYERS +map gm_construct -port $PORT
 else
 	cd ${SERVER_DIR}/Steam/gmod
+	rsync -avz ${SERVER_DIR}/Steam/lib/ ${SERVER_DIR}/Steam/gmod/bin
 	${SERVER_DIR}/Steam/gmod/srcds_run -game garrysmod -autoupdate -tickrate 66 -maxplayers $PLAYERS +map $WORLD -port $PORT
 fi
