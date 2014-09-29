@@ -107,7 +107,7 @@ elif [ $JAR_FILE == 'MindCrack.jar' ]; then
 	MAKE_ROOT
 	ZIP_FILE=MindCrack.zip
 	UNZIP
-elif [ $JAR_FILE == 'voltz.jar' ]; then
+elif [ $JAR_FILE == 'Voltz.jar' ]; then
 	ROOT_DIR=Voltz
 	MAKE_ROOT
 	ZIP_FILE=Voltz_Server.zip
