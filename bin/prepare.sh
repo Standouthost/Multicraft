@@ -16,15 +16,16 @@ function EULA {
 	echo "eula=true" > ${SERVER_DIR}/${ROOT_DIR}/eula.txt
 }
 
+function PROPERTIES {
+	rm -f ${SERVER_DIR}/${ROOT_DIR}/server.properties
+	cp ${SERVER_DIR}/server.properties ${SERVER_DIR}/${ROOT_DIR}/server.properties
+}
+
 function MAKE_ROOT {
 	if [ ! -d ${SERVER_DIR}/${ROOT_DIR} ]; then
 		mkdir ${SERVER_DIR}/${ROOT_DIR}
 	fi
-	rm -f ${SERVER_DIR}/${ROOT_DIR}/server.properties
-	if [ -e ${SERVER_DIR}/${ROOT_DIR}/server.properties ]; then
-		rm -f ${SERVER_DIR}/${ROOT_DIR}/server.properties
-	fi
-	cp ${SERVER_DIR}/server.properties ${SERVER_DIR}/${ROOT_DIR}/server.properties
+	PROPERTIES
 }
 
 function UNZIP {
@@ -37,6 +38,7 @@ function UNZIP {
 function COPY_JAR {
 	cp ${JAR_DIR}/${JAR_FILE} ${SERVER_DIR}/${ROOT_DIR}/
 }
+
 
 if [ $JAR_FILE == 'pocketmine.jar' ]; then
 	ROOT_DIR=jars
@@ -132,11 +134,12 @@ elif [ $JAR_FILE == 'TekkitClassic.jar' ]; then
 	MAKE_ROOT
 	ZIP_FILE=Tekkit_Classic.zip
 	UNZIP
-elif [ $JAR_FILE == 'tekkit_lite.jar' ]; then
+elif [ $JAR_FILE == 'Tekkit_Lite.jar' ]; then
 	ROOT_DIR=Tekkit_Lite
 	MAKE_ROOT
 	ZIP_FILE=Tekkit_Lite.zip
 	UNZIP
+	PROPERTIES
 elif [ $JAR_FILE == 'tshock.jar' ]; then
 	ROOT_DIR=TShock
 	MAKE_ROOT
