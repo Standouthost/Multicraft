@@ -119,7 +119,7 @@ elif [ $JAR_FILE == 'hexxit.jar' ]; then
 	MAKE_ROOT
 	ZIP_FILE=Hexxit.zip
 	UNZIP
-elif [ $JAR_FILE == 'tekkit.jar' ]; then
+elif [ $JAR_FILE == 'Tekkit.jar' ]; then
 	ROOT_DIR=Tekkit
 	MAKE_ROOT
 	ZIP_FILE=Tekkit_Server.zip
