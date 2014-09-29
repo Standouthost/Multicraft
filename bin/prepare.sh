@@ -122,12 +122,12 @@ elif [ $JAR_FILE == 'tekkit.jar' ]; then
 	MAKE_ROOT
 	ZIP_FILE=Tekkit_Server.zip
 	UNZIP
-elif [ $JAR_FILE == 'tekkitbigdig.jar' ]; then
+elif [ $JAR_FILE == 'TekkitBigDig.jar' ]; then
 	ROOT_DIR=Tekkit_BigDig
 	MAKE_ROOT
 	ZIP_FILE=Tekkit_BigDig.zip
 	UNZIP
-elif [ $JAR_FILE == 'tekkitclassic.jar' ]; then
+elif [ $JAR_FILE == 'TekkitClassic.jar' ]; then
 	ROOT_DIR=Tekkit_Classic
 	MAKE_ROOT
 	ZIP_FILE=Tekkit_Classic.zip
