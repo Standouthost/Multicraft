@@ -190,16 +190,8 @@ else
 	echo "You did not choose Mumble"
 fi
 if [ $JAR_FILE == 'StarMade.jar' ]; then
-	if [ -f $SERVER_DIR/StarMade-Starter.jar ]; then
-		echo "huzzah files"
-	else
+	if [ ! -f $SERVER_DIR/StarMade-Starter.jar ]; then
 		cp $JAR_DIR/StarMade-Starter.jar $SERVER_DIR/
-	fi
-	cd $SERVER_DIR
-	java -jar $SERVER_DIR/StarMade-Starter.jar -nogui
-	sleep 5
-	if [ ! -f $SERVER_DIR/StarMade/server.cfg ]; then
-		cp $JAR_DIR/StarMade.cfg $SERVER_DIR/StarMade/server.cfg
 	fi
 fi
 
