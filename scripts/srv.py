@@ -6,7 +6,7 @@ import sys
 IP = sys.argv[1]
 PORT = sys.argv[2]
 ID = sys.argv[3]
-DOMAIN = 'trueworldgaming.net'
+DOMAIN = 'example.com'
 ps = subprocess.Popen(["/usr/bin/php", "/home/minecraft/multicraft/api/name.php", ID], stdout=subprocess.PIPE).communicate()[0]
 processes = ps.split('\n')
 for row in processes[0:-1]:
