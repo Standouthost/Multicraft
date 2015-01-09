@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 STEAMROOT="$(cd "${0%/*}" && echo $PWD)"
 STEAMEXE=`basename "$0" .sh`

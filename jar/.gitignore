@@ -1,0 +1,9 @@
+*.zip
+*.jar
+*.rpm
+*.tmp
+*.tar.gz
+servers.sh
+update.sh
+nitrohosts.net
+jonserverlist

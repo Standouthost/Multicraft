@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Allow us to debug what's happening in the script if necessary
 if [ "$STEAM_DEBUG" ]; then
@@ -6,8 +6,6 @@ if [ "$STEAM_DEBUG" ]; then
 fi
 export TEXTDOMAIN=steam
 export TEXTDOMAINDIR=/usr/share/locale
-
-ARCHIVE_EXT=tar.xz
 
 # figure out the absolute path to the script being run a bit
 # non-obvious, the ${0%/*} pulls the path out of $0, cd's into the
@@ -42,77 +40,25 @@ function show_message()
 {
 	style=$1
 	shift
-
-	case "$style" in
-	--error)
-		title=$"Error"
-		;;
-	--warning)
-		title=$"Warning"
-		;;
-	*)
-		title=$"Note"
-		;;
-	esac
-
-	# Show the message on standard output, for logging
-	echo -e "$title: $*"
-
 	if ! zenity "$style" --text="$*" 2>/dev/null; then
+		case "$style" in
+		--error)
+			title=$"Error"
+			;;
+		--warning)
+			title=$"Warning"
+			;;
+		*)
+			title=$"Note"
+			;;
+		esac
+
 		# Save the prompt in a temporary file because it can have newlines in it
 		tmpfile="$(mktemp || echo "/tmp/steam_message.txt")"
 		echo -e "$*" >"$tmpfile"
-		xterm -bg "#383635" -fg "#d1cfcd" -T "$title" -e "cat $tmpfile; echo -n 'Press enter to continue: '; read input" 2>/dev/null || \
+		xterm -T "$title" -e "cat $tmpfile; echo -n 'Press enter to continue: '; read input" 2>/dev/null || \
 			(echo "$title:"; cat "$tmpfile"; echo -n 'Press enter to continue: '; read input)
 		rm -f "$tmpfile"
-	fi
-}
-
-function show_license_agreement()
-{
-	LICENSE="$STEAMROOT/steam_install_agreement.txt"
-	if [ ! -f "$STEAMCONFIG/steam_install_agreement.txt" ]; then
-		if [ ! -f "$LICENSE" ]; then
-			show_message --error $"Couldn't find Steam install license agreement, aborting!"
-			exit 1
-		fi
-
-		# See if they have been grandfathered in through the beta
-		SSAVersion=$(find -L "$STEAMCONFIG/`detect_package`" -name sharedconfig.vdf -exec fgrep SSAVersion {} \;)
-
-		if [ "$SSAVersion" != "" ]; then
-			answer=accepted
-		else
-			answer=declined
-			output=$(zenity --width 650 --height 500 --text-info --title=$"Steam Install Agreement" --filename="$LICENSE" --checkbox=$"I have read and accept these terms." 2>&1)
-			STATUS=$?
-			if echo $output | grep "status 1:" >/dev/null; then
-				# Zenity couldn't launch a window
-				STATUS=-1
-			fi
-			case $STATUS in
-			0)	# The agreement was accepted
-				answer=accepted
-				;;
-			1)	# The agreement was declined
-				;;
-			*)	# zenity wasn't available, try a fallback
-				tmpfile="$(mktemp || echo "/tmp/steam_message.txt")"
-				command="more \"$LICENSE\" || cat \"$LICENSE\"; echo -n $'Do you accept the terms of this agreement? [y/N]: '; read input; if [ x\$input = xy -o x\$input = xY ]; then echo accepted >\"$tmpfile\"; fi"
-				xterm -bg "#383635" -fg "#d1cfcd" -T $"Steam Install Agreement" -e "$command" || \
-					/bin/bash -c "$command"
-				if [ -f "$tmpfile" ]; then
-					read answer <"$tmpfile"
-					rm "$tmpfile"
-				fi
-				;;
-			esac
-			if [ "$answer" != "accepted" ]; then
-				exit 0
-			fi
-		fi
-
-		cp "$LICENSE" "$STEAMCONFIG"/
 	fi
 }
 
@@ -132,8 +78,6 @@ function detect_distro()
 		(. /etc/lsb-release; echo $DISTRIB_ID | tr '[A-Z]' '[a-z]')
 	elif [ -f /etc/os-release ]; then
 		(. /etc/os-release; echo $ID | tr '[A-Z]' '[a-z]')
-	elif [ -f /etc/debian_version ]; then
-		echo "debian"
 	else
 		# Generic fallback
 		uname -s
@@ -146,8 +90,6 @@ function detect_release()
 		(. /etc/lsb-release; echo $DISTRIB_RELEASE)
 	elif [ -f /etc/os-release ]; then
 		(. /etc/os-release; echo $VERSION_ID)
-	elif [ -f /etc/debian_version ]; then
-		cat /etc/debian_version
 	else
 		# Generic fallback
 		uname -r
@@ -299,39 +241,10 @@ function runtime_supported()
 	return 1
 }
 
-function download_archive()
-{
-	curl -#Of "$2" 2>&1 | tr '\r' '\n' | sed 's,[^0-9]*\([0-9]*\).*,\1,' | zenity --progress --auto-close --no-cancel --width 400 --text="$1\n$2"
-	return ${PIPESTATUS[0]}
-}
-
-function extract_archive()
-{
-	case "$2" in
-	*.gz)
-		BF=$(($(gzip --list "$2" | sed -n -e "s/.*[[:space:]]\+[0-9]\+[[:space:]]\+\([0-9]\+\)[[:space:]].*$/\1/p") / $((512 * 100)) + 1))
-		;;
-	*.xz)
-		BF=$(($(xz --robot --list "$2" | grep totals | awk '{print $5}') / $((512 * 100)) + 1))
-		;;
-	*)
-		BF=""
-		;;
-	esac
-	if [ "${BF}" ]; then
-		tar --blocking-factor=${BF} --checkpoint=1 --checkpoint-action='exec=echo $TAR_CHECKPOINT' -xf "$2" -C "$3" | zenity --progress --auto-close --no-cancel --width 400 --text="$1"
-		return ${PIPESTATUS[0]}
-	else
-		echo "$1"
-		tar -xf "$2" -C "$3"
-		return $?
-	fi
-}
-
 function has_runtime_archive()
 {
 	# Make sure we have files to unpack
-	for file in "$STEAM_RUNTIME.$ARCHIVE_EXT".part*; do
+	for file in "$STEAM_RUNTIME".tar.bz2*; do
 		if [ ! -f "$file" ]; then
 			return 1
 		fi
@@ -363,110 +276,25 @@ function unpack_runtime()
 	EXTRACT_TMP="$STEAM_RUNTIME.tmp"
 	rm -rf "$EXTRACT_TMP"
 	mkdir "$EXTRACT_TMP"
-	cat "$STEAM_RUNTIME.$ARCHIVE_EXT".part* >"$STEAM_RUNTIME.$ARCHIVE_EXT"
-	EXISTING_CHECKSUM="$(cd "$(dirname "$STEAM_RUNTIME")"; md5sum "$(basename "$STEAM_RUNTIME.$ARCHIVE_EXT")")"
-	EXPECTED_CHECKSUM="$(cat "$STEAM_RUNTIME.checksum")"
-	if [ "$EXISTING_CHECKSUM" != "$EXPECTED_CHECKSUM" ]; then
-		echo $"Runtime checksum: $EXISTING_CHECKSUM, expected $EXPECTED_CHECKSUM" >&2
+	if ! (cd "$EXTRACT_TMP" && cat "$STEAM_RUNTIME".tar.bz2* | tar xjf -); then
 		return 2
-	fi
-	if ! extract_archive $"Unpacking Steam Runtime" "$STEAM_RUNTIME.$ARCHIVE_EXT" "$EXTRACT_TMP"; then
-		return 3
 	fi
 
 	# Move it into place!
 	if [ -d "$STEAM_RUNTIME" ]; then
 		rm -rf "$STEAM_RUNTIME.old"
 		if ! mv "$STEAM_RUNTIME" "$STEAM_RUNTIME.old"; then
-			return 4
+			return 3
 		fi
 	fi
 	if ! mv "$EXTRACT_TMP"/* "$EXTRACT_TMP"/..; then
-		return 5
+		return 4
 	fi
 	rm -rf "$EXTRACT_TMP"
 	if ! cp "$STEAM_RUNTIME.checksum" "$STEAM_RUNTIME/checksum"; then
-		return 6
+		return 5
 	fi
 	return 0
-}
-
-function get_missing_libraries()
-{
-	if ! ldd "$1" >/dev/null 2>&1; then
-		# We couldn't run the link loader for this architecture
-		echo "libc.so.6"
-	else
-		ldd "$1" | grep "=>" | grep -v linux-gate | grep -v / | awk '{print $1}'
-	fi
-}
-
-function check_shared_libraries()
-{
-	if [ -f "$STEAMROOT/$PLATFORM/steamui.so" ]; then
-		MISSING_LIBRARIES=$(get_missing_libraries "$STEAMROOT/$PLATFORM/steamui.so")
-	else
-		MISSING_LIBRARIES=$(get_missing_libraries "$STEAMROOT/$PLATFORM/$STEAMEXE")
-	fi
-	if [ "$MISSING_LIBRARIES" != "" ]; then
-		show_message --error $"You are missing the following 32-bit libraries, and Steam may not run:\n$MISSING_LIBRARIES"
-	fi
-}
-
-function ignore_signal()
-{
-	:
-}
-
-function reset_steam()
-{
-	# Don't wipe development files
-	if [ -f "$STEAMROOT/steam_dev.cfg" ]; then
-		echo "Can't reset development directory"
-		return
-	fi
-
-	if [ -z "$INITIAL_LAUNCH" ]; then
-		show_message --error $"Please exit Steam before resetting it."
-		exit 1
-	fi
-
-	if [ ! -f "$(detect_bootstrap)" ]; then
-		show_message --error $"Couldn't find bootstrap, it's not safe to reset Steam. Please contact technical support."
-		exit 2
-	fi
-
-	STEAM_SAVE="$STEAMROOT/.save"
-
-	# Don't let the user interrupt us, or they may corrupt the install
-	trap ignore_signal INT
-
-	# Back up games and critical files
-	mkdir -p "$STEAM_SAVE"
-	for i in bootstrap.tar.xz ssfn* SteamApps userdata; do
-		if [ -e "$i" ]; then
-			mv -f "$i" "$STEAM_SAVE/"
-		fi
-	done
-	for i in "$STEAMCONFIG/registry.vdf"; do
-		mv -f "$i" "$i.bak"
-	done
-
-	# Scary!
-	rm -rf "$STEAMROOT/"*
-
-	# Move things back into place
-	mv -f "$STEAM_SAVE/"* "$STEAMROOT/"
-	rmdir "$STEAM_SAVE"
-
-	# Okay, at this point we can recover, so re-enable interrupts
-	trap '' INT
-
-	# Reinstall the bootstrap and we're done.
-	install_bootstrap
-
-	echo $"Reset complete!"
-	exit
 }
 
 #determine platform
@@ -504,14 +332,7 @@ if [ "$UNAME" == "Linux" ]; then
 		INITIAL_LAUNCH=true
 	fi
 
-	if [ "$1" = "--reset" ]; then
-		reset_steam
-	fi
-
 	if [ "$INITIAL_LAUNCH" ]; then
-		# Show the license agreement, if needed
-		show_license_agreement
-
 		# See if we need to update the /usr/bin/steam script
 		if [ -z "$STEAMSCRIPT" ]; then
 			STEAMSCRIPT="/usr/bin/`detect_package`"
@@ -555,54 +376,8 @@ if [ "$UNAME" == "Linux" ]; then
 	# Show what we detect for distribution and release
 	echo "Running Steam on $(distro_description)"
 
-	# The Steam runtime is a complete set of libraries for running
-	# Steam games, and is intended to continue to work going forward.
-	#
-	# The runtime is open source and the scripts used to build it are
-	# available on GitHub:
-	#	https://github.com/ValveSoftware/steam-runtime
-	#
-	# We would like this runtime to work on as many Linux distributions
-	# as possible, so feel free to tinker with it and submit patches and
-	# bug reports.
-	#
-	if [ "$STEAM_RUNTIME" = "debug" ]; then
-		# Use the debug runtime if it's available, and the default if not.
-		export STEAM_RUNTIME="$STEAMROOT/$PLATFORM/steam-runtime"
-
-		if unpack_runtime; then
-			if [ -z "$STEAM_RUNTIME_DEBUG" ]; then
-				STEAM_RUNTIME_DEBUG="$(cat "$STEAM_RUNTIME/version.txt" | sed 's,-release,-debug,')"
-			fi
-			if [ -z "$STEAM_RUNTIME_DEBUG_DIR" ]; then
-				STEAM_RUNTIME_DEBUG_DIR="$STEAMROOT/$PLATFORM"
-			fi
-			if [ ! -d "$STEAM_RUNTIME_DEBUG_DIR/$STEAM_RUNTIME_DEBUG" ]; then
-				# Try to download the debug runtime
-				STEAM_RUNTIME_DEBUG_URL=$(grep "$STEAM_RUNTIME_DEBUG" "$STEAM_RUNTIME/README.txt")
-				mkdir -p "$STEAM_RUNTIME_DEBUG_DIR"
-
-				STEAM_RUNTIME_DEBUG_ARCHIVE="$STEAM_RUNTIME_DEBUG_DIR/$(basename "$STEAM_RUNTIME_DEBUG_URL")"
-				if [ ! -f "$STEAM_RUNTIME_DEBUG_ARCHIVE" ]; then
-					echo $"Downloading debug runtime: $STEAM_RUNTIME_DEBUG_URL"
-					(cd "$STEAM_RUNTIME_DEBUG_DIR" && \
-						download_archive $"Downloading debug runtime..." "$STEAM_RUNTIME_DEBUG_URL")
-				fi
-				if ! extract_archive $"Unpacking debug runtime..." "$STEAM_RUNTIME_DEBUG_ARCHIVE" "$STEAM_RUNTIME_DEBUG_DIR"; then
-					rm -rf "$STEAM_RUNTIME_DEBUG" "$STEAM_RUNTIME_DEBUG_ARCHIVE"
-				fi
-			fi
-			if [ -d "$STEAM_RUNTIME_DEBUG_DIR/$STEAM_RUNTIME_DEBUG" ]; then
-				echo "STEAM_RUNTIME debug enabled, using $STEAM_RUNTIME_DEBUG"
-				export STEAM_RUNTIME="$STEAM_RUNTIME_DEBUG_DIR/$STEAM_RUNTIME_DEBUG"
-
-				# Set up the link to the source code
-				ln -sf "$STEAM_RUNTIME/source" /tmp/source
-			else
-				echo $"STEAM_RUNTIME couldn't download and unpack $STEAM_RUNTIME_DEBUG_URL, falling back to $STEAM_RUNTIME"
-			fi
-		fi
-	elif [ "$STEAM_RUNTIME" = "1" ]; then
+	# prepend our lib path to LD_LIBRARY_PATH
+	if [ "$STEAM_RUNTIME" = "1" ]; then
 		echo "STEAM_RUNTIME is enabled by the user"
 		export STEAM_RUNTIME="$STEAMROOT/$PLATFORM/steam-runtime"
 	elif [ "$STEAM_RUNTIME" = "0" ]; then
@@ -617,7 +392,7 @@ if [ "$UNAME" == "Linux" ]; then
 	else
 		echo "STEAM_RUNTIME has been set by the user to: $STEAM_RUNTIME"
 	fi
-	if [ "$STEAM_RUNTIME" -a "$STEAM_RUNTIME" != "0" ]; then
+	if [ "$STEAM_RUNTIME" ]; then
 		# Unpack the runtime if necessary
 		if unpack_runtime; then
 			case $(uname -m) in
@@ -635,12 +410,7 @@ if [ "$UNAME" == "Linux" ]; then
 			show_message --error $"Couldn't set up the Steam Runtime. Are you running low on disk space?\nContinuing..."
 		fi
 	fi
-
-	# prepend our lib path to LD_LIBRARY_PATH
 	export LD_LIBRARY_PATH="$STEAMROOT/$PLATFORM:$LD_LIBRARY_PATH"
-
-	# Check to make sure the user will be able to run steam...
-	check_shared_libraries
 
 	# disable SDL1.2 DGA mouse because we can't easily support it in the overlay
 	export SDL_VIDEO_X11_DGAMOUSE=0
@@ -673,7 +443,7 @@ else # if [ "$UNAME" == "Darwin" ]; then
    esac  
 fi
 
-ulimit -n 2048 2>/dev/null
+ulimit -n 2048
 
 # Touch our startup file so we can detect bootstrap launch failure
 if [ "$UNAME" = "Linux" ]; then
@@ -695,7 +465,7 @@ if [ "$STEAM_DEBUGGER" == "gdb" ] || [ "$STEAM_DEBUGGER" == "cgdb" ]; then
 		unset LD_PRELOAD
 	fi
 
-	$STEAM_DEBUGGER -x "$ARGSFILE" --args "$STEAMROOT/$PLATFORM/$STEAMEXE" "$@"
+	$STEAM_DEBUGGER -x "$ARGSFILE" "$STEAMROOT/$PLATFORM/$STEAMEXE" "$@"
 	rm "$ARGSFILE"
 elif [ "$STEAM_DEBUGGER" == "valgrind" ]; then
 	DONT_BREAK_ON_ASSERT=1 G_SLICE=always-malloc G_DEBUG=gc-friendly valgrind --error-limit=no --undef-value-errors=no --suppressions=$PLATFORM/steam.supp $STEAM_VALGRIND "$STEAMROOT/$PLATFORM/$STEAMEXE" "$@" 2>&1 | tee steam_valgrind.txt
