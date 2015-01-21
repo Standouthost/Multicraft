@@ -17,3 +17,7 @@ Open Source Multicraft Scripts All scripts published in this repository are rele
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Zip and .tar.gz files can be downloaded from the soh.re pulp server.
+https://pulp.soh.re/pulp/isos/multicraft/
