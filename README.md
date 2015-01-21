@@ -20,4 +20,5 @@ Open Source Multicraft Scripts All scripts published in this repository are rele
 
 
 Zip and .tar.gz files can be downloaded from the soh.re pulp server.
-https://pulp.soh.re/pulp/isos/multicraft/
+
+[Soh.re Pulp Repo](https://pulp.soh.re/pulp/isos/multicraft/)
