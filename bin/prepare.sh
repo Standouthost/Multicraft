@@ -150,7 +150,7 @@ elif [ $JAR_FILE == 'teamspeak.jar' ]; then
 	MAKE_ROOT
 	ZIP_FILE=TeamSpeak3.zip
 	UNZIP
-elif [[ $JAR_FILE == 'left4dead2.jar' || $JAR_FILE == 'garrysmod.jar' || $JAR_FILE == 'tf2.jar' || $JAR_FILE == 'hl2mp.jar' || $JAR_FILE == 'cstrikesource.jar' ]]; then
+elif [[ $JAR_FILE == 'ark.jar' || $JAR_FILE == 'left4dead2.jar' || $JAR_FILE == 'garrysmod.jar' || $JAR_FILE == 'tf2.jar' || $JAR_FILE == 'hl2mp.jar' || $JAR_FILE == 'cstrikesource.jar' ]]; then
 	ROOT_DIR=Steam
 	MAKE_ROOT
 	ZIP_FILE=steamcmd.zip
@@ -219,6 +219,20 @@ if [ $JAR_FILE == 'BungeeCord.1.6.4.jar' ]; then
         QPORT=$(expr $PORT + 30000)
         sed -i "s/^.*\shost: 0.0.0.0:25577/  host: $IP:$PORT/g" $SERVER_DIR/BungeeCord/config.yml
         sed -i "s/^.*\squery_port: 25577/  query_port: $QPORT/g" $SERVER_DIR/BungeeCord/config.yml
+fi
+
+if [ $JAR_FILE == 'BungeeCord.jar' ]; then
+        if [ ! -d $SERVER_DIR/BungeeCord ]; then
+                mkdir $SERVER_DIR/BungeeCord
+        fi
+        if [ ! -f $SERVER_DIR/BungeeCord/config.yml ]; then
+                cp $JAR_DIR/BungeeCord.1.7.9/config.yml $SERVER_DIR/BungeeCord/config.yml
+        fi
+        cp $JAR_DIR/BungeeCord.jar $SERVER_DIR/BungeeCord/BungeeCord.jar
+        QPORT=$(expr $PORT + 30000)
+        sed -i "s/^.*\shost: 0.0.0.0:25577/  host: $IP:$PORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/^.*\squery_port: 25577/  query_port: $QPORT/g" $SERVER_DIR/BungeeCord/config.yml
+        sed -i "s/^.*\sip_forward: false/  ip_forward: true/g" $SERVER_DIR/BungeeCord/config.yml
 fi
 
 if [ $JAR_FILE == 'BungeeCord.1.7.9.jar' ]; then
