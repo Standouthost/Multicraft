@@ -99,6 +99,11 @@ elif [ $JAR_FILE == 'Unleashed.jar' ]; then
 	MAKE_ROOT
 	ZIP_FILE=Unleashed.zip
 	UNZIP
+elif [ $JAR_FILE == 'TPPI.jar' ]; then
+	ROOT_DIR=TPPI
+	MAKE_ROOT
+	ZIP_FILE=TPPI.zip
+	UNZIP
 elif [ $JAR_FILE == 'BTeam.jar' ]; then
 	ROOT_DIR=BTeam
 	MAKE_ROOT
@@ -249,7 +254,7 @@ if [ $JAR_FILE == 'BungeeCord.1.7.9.jar' ]; then
         sed -i "s/^.*\sip_forward: false/  ip_forward: true/g" $SERVER_DIR/BungeeCord/config.yml
 fi
 
-chown -R mc$SERVER_ID:mc$SERVER_ID "$SERVER_DIR"
+chown -R -h mc$SERVER_ID:mc$SERVER_ID "$SERVER_DIR"
 LSOF=`which lsof`
     #Convert IP to a format accepted by lsof
     if [ "$IP" = "0.0.0.0" ]; then
